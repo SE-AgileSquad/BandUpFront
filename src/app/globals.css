@@ -1,0 +1,146 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* Force hide scrollbar on screens smaller than 468px */
+@media (max-width: 467px) {
+  html,
+  body {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    overflow: -moz-scrollbars-none !important;
+  }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar,
+  *::-webkit-scrollbar {
+    display: none !important;
+    width: 0px !important;
+    background: transparent !important;
+  }
+}
+
+@font-face {
+  font-family: 'Literata';
+  src: url('/fonts/Literata/Literata-VariableFont_opsz,wght.ttf') format('truetype-variations');
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Literata';
+  src: url('/fonts/Literata/Literata-Italic-VariableFont_opsz,wght.ttf') format('truetype-variations');
+  font-weight: 200 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('/fonts/Vazirmatn/Vazirmatn-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('/fonts/Vazirmatn/Vazirmatn-Bold.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'CaesarDressing';
+  src: url('/fonts/CaesarDressing/CaesarDressing.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Base modern scrollbar (Light Theme) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f8fafc; /* slate-50 */
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #b7b7b7;
+  border-radius: 0;
+  transition: background 0.2s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7c7c7c;
+}
+
+/* Dark Theme overrides for main scrollbar */
+[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: #1d1d29; /* zinc-950 */
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: #2b3545; /* zinc-800 */
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46; /* zinc-700 */
+}
+
+
+/* Thin scrollbar (Light Theme) */
+.thin-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #666666 transparent;
+}
+
+.thin-scrollbar::-webkit-scrollbar {
+  height: 4px;
+}
+
+.thin-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #f3e8ff; /* lilac/light purple */
+  border-radius: 999px;
+  border: 4px solid transparent;
+  background-clip: content-box;
+}
+
+.thin-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: #d8b4fe; /* lilac-400 */
+}
+
+/* Dark Theme overrides for thin scrollbar */
+[data-theme="dark"] .thin-scrollbar {
+  scrollbar-color: #3f3f46 transparent; /* zinc-700 */
+}
+
+[data-theme="dark"] .thin-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #27272a; /* zinc-800 */
+}
+
+[data-theme="dark"] .thin-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: #3f3f46; /* zinc-700 */
+}
+
+
+/* Overlay scrollbar */
+.overlay-scrollbar::-webkit-scrollbar {
+  height: 4px;
+  position: absolute;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
