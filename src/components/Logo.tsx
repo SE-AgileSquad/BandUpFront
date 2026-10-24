@@ -10,7 +10,15 @@ export default function Logo() {
         width={120}
         height={40}
         priority
-        className="h-8 w-auto md:h-10"
+        className="h-8 w-auto md:h-10 dark:hidden"
+      />
+      <Image
+        src="/images/BandUp_Logo_Dark.png"
+        alt="BandUp"
+        width={120}
+        height={40}
+        priority
+        className="hidden h-8 w-auto md:h-10 dark:block"
       />
     </Link>
   );
