@@ -19,7 +19,7 @@ export default function RootLayout({
       <body
         className="w-screen bg-background text-foreground transition-colors font-[var(--font-roboto)] antialiased overflow-x-clip"
         style={{
-          fontFamily: "Vazirmatn, sans-serif",
+          fontFamily: "Inter, sans-serif",
         }}
       >
           <QueryProvider>

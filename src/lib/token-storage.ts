@@ -1,9 +1,10 @@
+// Token storage utility functions for managing access and refresh tokens in localStorage.
+// For this project, we are using cookies so these functions are not used, but they are kept here for reference in case we switch back to localStorage in the future.
+
 const ACCESS_TOKEN_KEY = "ib_access_token";
 const REFRESH_TOKEN_KEY = "ib_refresh_token";
 
 export function saveTokens(accessToken: string, refreshToken: string): void {
-    console.log('saved access token:', accessToken)
-    console.log('saved refresh token:', refreshToken)
   localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
   localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
 }
