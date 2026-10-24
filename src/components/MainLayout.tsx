@@ -9,7 +9,7 @@ type MainLayoutProps = {
 
 export default function MainLayout({
   children,
-  isLoggedIn = false,
+  isLoggedIn = true,
 }: MainLayoutProps) {
   return (
     <div className="flex min-h-screen flex-col">
