@@ -1,11 +1,10 @@
-import React from 'react'
+import { AuthShell } from "@/features/auth/components/auth-shell";
+import SignUpPage from "@/features/auth/components/sign-up-page";
 
-type Props = {}
-
-const RegisterPage = (props: Props) => {
+export default function RegisterPage() {
     return (
-        <div>RegisterPage</div>
-    )
+        <AuthShell>
+            <SignUpPage />
+        </AuthShell>
+    );
 }
-
-export default RegisterPage

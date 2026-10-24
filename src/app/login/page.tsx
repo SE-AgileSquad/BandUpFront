@@ -1,11 +1,15 @@
-import React from 'react'
+import type { Metadata } from "next";
+import { AuthShell } from "@/features/auth/components/auth-shell";
+import LoginPage from "@/features/auth/components/login-page";
 
-type Props = {}
+export const metadata: Metadata = {
+  title: "Sign in",
+};
 
-const LoginPage = (props: Props) => {
+export default function Page() {
   return (
-    <div>LoginPage</div>
-  )
+    <AuthShell>
+      <LoginPage />
+    </AuthShell>
+  );
 }
-
-export default LoginPage
