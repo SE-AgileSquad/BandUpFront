@@ -3,7 +3,9 @@ const MainPage = (
 ) => {
 
   return (
-    <div>Main page</div>
+    <div className="flex min-h-screen flex-col items-center justify-between p-24 bg-primary">
+      Main page
+    </div>
   )
 }
 

@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="fa" className="overflow-x-clip">
       <body
-        className="w-screen bg-white text-black dark:bg-gray-800 dark:text-white transition-colors font-[var(--font-roboto)] antialiased overflow-x-clip"
+        className="w-screen bg-background text-foreground transition-colors font-[var(--font-roboto)] antialiased overflow-x-clip"
         style={{
           fontFamily: "Vazirmatn, sans-serif",
         }}
