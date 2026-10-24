@@ -1,13 +1,21 @@
 import MainLayout from "@/components/MainLayout"
+import Hero from "./components/Heor"
+import HowItWorks from "./components/HowItWorks"
+import FeatureRows from "./components/FeatureRows"
+import MoreTools from "./components/MoreTools"
+import FinalCta from "./components/FinalCta"
 
 const LandingPage = () => {
 
   return (
     <MainLayout>
-      <div className="flex flex-col items-center justify-center gap-4 py-8">
-        <h1 className="text-4xl font-bold">Welcome to MyApp</h1>
-        <p className="text-lg text-gray-600">Your one-stop solution for managing your tasks efficiently.</p>
-      </div>
+      <>
+        <Hero image="/images/landing/Landing_Hero_ image.png" />
+        <HowItWorks />
+        <FeatureRows />
+        <MoreTools />
+        <FinalCta />
+      </>
     </MainLayout>
   )
 }
