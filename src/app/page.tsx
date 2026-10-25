@@ -1,9 +1,9 @@
 import MainLayout from "@/components/MainLayout"
-import Hero from "./components/Heor"
-import HowItWorks from "./components/HowItWorks"
-import FeatureRows from "./components/FeatureRows"
-import MoreTools from "./components/MoreTools"
-import FinalCta from "./components/FinalCta"
+import Hero from "@/features/landing/components/Heor"
+import HowItWorks from "@/features/landing/components/HowItWorks"
+import FeatureRows from "@/features/landing/components/FeatureRows"
+import MoreTools from "@/features/landing/components/MoreTools"
+import FinalCta from "@/features/landing/components/FinalCta"
 
 const LandingPage = () => {
 
