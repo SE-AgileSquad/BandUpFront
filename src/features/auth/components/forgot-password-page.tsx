@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { maskEmail } from "../utils/mask-email";
 import { AuthHeader } from "./auth-header";
-import { BackToSignInLink } from "./back-to-sign-in-link";
 import { NewPasswordForm } from "./new-password-form";
 import { PasswordResetSuccess } from "./password-reset-success";
 import { RequestResetForm } from "./request-reset-form";
@@ -81,8 +80,6 @@ export default function ForgotPasswordPage({
             )}
 
             {step === "done" && <PasswordResetSuccess />}
-
-            {step !== "done" && <BackToSignInLink />}
         </div>
     );
 }
