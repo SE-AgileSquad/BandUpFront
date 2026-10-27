@@ -16,7 +16,7 @@ export const AUTH_PHOTO_SRC = "/images/auth/Side_Photo.png";
 export const LOGIN_PATH = "/login";
 export const REGISTER_PATH = "/register";
 export const FORGOT_PASSWORD_PATH = "/forgot-password";
-export const DASHBOARD_PATH = "/dashboard";
+export const DASHBOARD_PATH = "/dashboard/user";
 export const EMAIL_EXISTS_ERROR_TYPE = "emailExists";
 
 export const PASSWORD_RULE_MESSAGE =
