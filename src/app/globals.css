@@ -1,82 +1,79 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "shadcn/tailwind.css";
 
-@custom-variant dark (&:is(.dark *));
-/* ---------- 1. Color tokens (light) ---------- */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --radius: 0.5rem;
-
-  --background: #ffffff;
-  --foreground: #020617;
+  --background: #f6f4ff;
+  --foreground: #1b1636;
   --card: #ffffff;
-  --card-foreground: #020617;
+  --card-foreground: #1b1636;
   --popover: #ffffff;
-  --popover-foreground: #020617;
+  --popover-foreground: #1b1636;
+  --primary: #6c47ff;
+  --primary-foreground: #ffffff;
+  --primary-soft: #f1eeff;
+  --secondary: #f1eeff;
+  --secondary-foreground: #1b1636;
+  --muted: #f1eeff;
+  --muted-foreground: #6b6785;
+  --accent: #f1eeff;
+  --accent-foreground: #6c47ff;
+  --border: #e3def8;
+  --input: #e3def8;
+  --ring: #6c47ff;
 
-  --primary: #1e40af;
-  --primary-foreground: #f8fafc;
-  --secondary: #f1f5f9;
-  --secondary-foreground: #0f172a;
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
-  --accent: #dbeafe;
-  --accent-foreground: #1e40af;
+  --destructive: #dc2626;
+  --success: #16a34a;
+  --warning: #d97706;
+  --info: #2563eb;
 
-  --border: #e2e8f0;
-  --input: #e2e8f0;
-  --ring: #1e40af;
+  --gradient-from: #7b5cff;
+  --gradient-to: #5632e6;
+  --on-gradient-cta-text: #5632e6;
 
-  /* status */
-  --destructive: #ef4444;
-  --destructive-foreground: #fafafa;
-  --destructive-bg: #fef2f2;
-  --success: #15803d;
-  --success-bg: #f0fdf4;
-  --warning: #b45309;
-  --warning-bg: #fef3c7;
-
-  /* review page highlights */
-  --highlight: #fef08a;
-  --highlight-border: #eab308;
-  --highlight-foreground: #422006;
+  --radius: 16px;
 }
 
-/* ---------- 2. Dark mode (suggested; Figma only has light) ---------- */
 .dark {
-  --background: #020617;
-  --foreground: #f8fafc;
-  --card: #0f172a;
-  --card-foreground: #f8fafc;
-  --popover: #0f172a;
-  --popover-foreground: #f8fafc;
-
-  --primary: #2563eb;
-  --primary-foreground: #f8fafc;
-  --secondary: #1e293b;
-  --secondary-foreground: #f8fafc;
-  --muted: #1e293b;
-  --muted-foreground: #94a3b8;
-  --accent: #1e3a8a;
-  --accent-foreground: #bfdbfe;
-
-  --border: #1e293b;
-  --input: #1e293b;
-  --ring: #3b82f6;
+  --background: #0f0b1f;
+  --foreground: #f4f1ff;
+  --card: #1a1533;
+  --card-foreground: #f4f1ff;
+  --popover: #1a1533;
+  --popover-foreground: #f4f1ff;
+  --primary: #8b6cff;
+  --primary-foreground: #ffffff;
+  --primary-soft: #241e44;
+  --secondary: #241e44;
+  --secondary-foreground: #f4f1ff;
+  --muted: #241e44;
+  --muted-foreground: #a9a3c8;
+  --accent: #241e44;
+  --accent-foreground: #c9baff;
+  --border: #2e2850;
+  --input: #2e2850;
+  --ring: #8b6cff;
 
   --destructive: #f87171;
-  --destructive-bg: #2a1215;
   --success: #4ade80;
-  --success-bg: #052e16;
   --warning: #fbbf24;
-  --warning-bg: #2b1d05;
+  --info: #60a5fa;
 
-  --highlight: #713f12;
-  --highlight-border: #eab308;
-  --highlight-foreground: #fef9c3;
+  --gradient-from: #4a2fd0;
+  --gradient-to: #241670;
+  --on-gradient-cta-text: #241670;
 }
 
-/* ---------- 3. Expose tokens to Tailwind ---------- */
+:root,
+.dark {
+  --gradient-primary: linear-gradient(
+    160deg,
+    var(--gradient-from) 0%,
+    var(--gradient-to) 71.4%
+  );
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -86,6 +83,7 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
@@ -96,398 +94,190 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-destructive-bg: var(--destructive-bg);
   --color-success: var(--success);
-  --color-success-bg: var(--success-bg);
   --color-warning: var(--warning);
-  --color-warning-bg: var(--warning-bg);
-  --color-highlight: var(--highlight);
-  --color-highlight-border: var(--highlight-border);
-  --color-highlight-foreground: var(--highlight-foreground);
+  --color-info: var(--info);
+  --color-gradient-from: var(--gradient-from);
+  --color-gradient-to: var(--gradient-to);
+  --color-on-gradient-cta: var(--on-gradient-cta-text);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --radius-logo: 11px;
+  --radius-btn: 16px;
+  --radius-frame: 20px;
+  --radius-card: 24px;
+  --radius-banner: 40px;
+  --radius-pill: 9999px;
 
-  --font-sans: var(--font-vazirmatn), ui-sans-serif, system-ui, sans-serif;
-
-  /* ---------- 4. Type scale ---------- */
-  --text-caption: 0.6875rem;
-  /* 11 */
-  --text-caption--line-height: 1.5;
-  --text-small: 0.8125rem;
-  /* 13 */
-  --text-small--line-height: 1.6;
-  --text-body: 0.875rem;
-  /* 14 */
-  --text-body--line-height: 1.65;
-  --text-lead: 1.125rem;
-  /* 18, Body/Large */
-  --text-lead--line-height: 1.65;
-  --text-h4: 1.25rem;
-  /* 20 */
-  --text-h4--line-height: 1.4;
-  --text-h1: 1.75rem;
-  /* 28 */
-  --text-h1--line-height: 1.4;
-  --text-display: 2.125rem;
-  /* 34 */
-  --text-display--line-height: 1.4;
-  --text-h2: 2.25rem;
-  /* 36 */
-  --text-h2--line-height: 1.25;
-  --text-hero: 3.5rem;
-  /* 56 */
-  --text-hero--line-height: 1.12;
-
-  /* mobile sizes: use text-hero-sm md:text-hero */
-  --text-hero-sm: 2.375rem;
-  /* 38 */
-  --text-hero-sm--line-height: 1.15;
-  --text-h2-sm: 1.75rem;
-  /* 28 */
-  --text-h2-sm--line-height: 1.25;
-
-  /* ---------- 5. Layout and shadow ---------- */
-  --container-content: 75rem;
-  /* 1200px, max-w-content */
-  --shadow-card: 0 14px 36px rgb(0 0 0 / 0.14);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
-/* ---------- 6. Base ---------- */
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
   body {
-    @apply bg-background text-foreground font-sans text-body;
+    @apply bg-background text-foreground font-sans antialiased;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: -0.005em;
+    text-rendering: optimizeLegibility;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply text-foreground;
+    text-wrap: balance;
   }
 }
 
-/* Force hide scrollbar on screens smaller than 468px */
-@media (max-width: 467px) {
+@utility bg-gradient-primary {
+  background-image: var(--gradient-primary);
+}
 
-  html,
-  body {
-    scrollbar-width: none !important;
-    -ms-overflow-style: none !important;
-    overflow: -moz-scrollbars-none !important;
+@utility container-page {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: 24px;
+  @media (min-width: 768px) {
+    padding-inline: 40px;
   }
-
-  html::-webkit-scrollbar,
-  body::-webkit-scrollbar,
-  *::-webkit-scrollbar {
-    display: none !important;
-    width: 0px !important;
-    background: transparent !important;
+  @media (min-width: 1024px) {
+    padding-inline: 80px;
   }
 }
 
-@font-face {
-  font-family: 'Literata';
-  src: url('/fonts/Literata/Literata-VariableFont_opsz,wght.ttf') format('truetype-variations');
-  font-weight: 200 900;
-  font-style: normal;
-  font-display: swap;
+@utility section-y {
+  padding-block: 56px;
+  @media (min-width: 768px) {
+    padding-block: 64px;
+  }
+  @media (min-width: 1024px) {
+    padding-block: 80px;
+  }
 }
 
-@font-face {
-  font-family: 'Literata';
-  src: url('/fonts/Literata/Literata-Italic-VariableFont_opsz,wght.ttf') format('truetype-variations');
-  font-weight: 200 900;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Vazirmatn';
-  src: url('/fonts/Vazirmatn/Vazirmatn-ExtraLight.woff2') format('woff2');
-  font-weight: 200;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Vazirmatn';
-  src: url('/fonts/Vazirmatn/Vazirmatn-Light.woff2') format('woff2');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Vazirmatn';
-  src: url('/fonts/Vazirmatn/Vazirmatn-SemiBold.woff2') format('woff2');
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Vazirmatn';
-  src: url('/fonts/Vazirmatn/Vazirmatn-Bold.woff2') format('woff2');
+@utility text-display {
+  font-size: 40px;
+  line-height: 46px;
   font-weight: 700;
-  font-style: normal;
-  font-display: swap;
+  letter-spacing: -0.025em;
+  @media (min-width: 768px) {
+    font-size: 56px;
+    line-height: 62px;
+  }
+  @media (min-width: 1024px) {
+    font-size: 68px;
+    line-height: 74px;
+  }
 }
 
-@font-face {
-  font-family: 'Vazirmatn';
-  src: url('/fonts/Vazirmatn/Vazirmatn-ExtraBold.woff2') format('woff2');
-  font-weight: 800;
-  font-style: normal;
-  font-display: swap;
+@utility text-h1-cta {
+  font-size: 32px;
+  line-height: 40px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  @media (min-width: 1024px) {
+    font-size: 48px;
+    line-height: 56px;
+  }
 }
 
-@font-face {
-  font-family: 'CaesarDressing';
-  src: url('/fonts/CaesarDressing/CaesarDressing.woff2') format('woff2');
+@utility text-h2 {
+  font-size: 30px;
+  line-height: 38px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  @media (min-width: 768px) {
+    font-size: 36px;
+    line-height: 44px;
+  }
+  @media (min-width: 1024px) {
+    font-size: 44px;
+    line-height: 52px;
+  }
+}
+
+@utility text-h3 {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  @media (min-width: 1024px) {
+    font-size: 34px;
+    line-height: 42px;
+  }
+}
+
+@utility text-card-title {
+  font-size: 18px;
+  line-height: normal;
+  font-weight: 700;
+}
+
+@utility text-lead {
+  font-size: 16px;
+  line-height: 24px;
   font-weight: 400;
-  font-style: normal;
+  color: var(--muted-foreground);
+  @media (min-width: 1024px) {
+    font-size: 17px;
+    line-height: 26px;
+  }
 }
 
-/* ---------- Inter Font Family ---------- */
-
-@font-face {
-  font-family: "Inter";
-  src: url("/fonts/Inter/Inter ExtraLight.otf") format("opentype");
-  font-weight: 200;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Inter";
-  src: url("/fonts/Inter/Inter ExtraLight Italic.otf") format("opentype");
-  font-weight: 200;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Inter";
-  src: url("/fonts/Inter/Inter Light.otf") format("opentype");
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Inter";
-  src: url("/fonts/Inter/Inter Light Italic.otf") format("opentype");
-  font-weight: 300;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Inter";
-  src: url("/fonts/Inter/Inter Regular.otf") format("opentype");
+@utility text-body {
+  font-size: 16px;
+  line-height: 24px;
   font-weight: 400;
-  font-style: normal;
-  font-display: swap;
 }
 
-@font-face {
-  font-family: "Inter";
-  src: url("/fonts/Inter/Inter Regular Italic.otf") format("opentype");
+@utility text-body-sm {
+  font-size: 14px;
+  line-height: 21px;
   font-weight: 400;
-  font-style: italic;
-  font-display: swap;
 }
 
-@font-face {
-  font-family: "Inter";
-  src: url("/fonts/Inter/Inter Medium.otf") format("opentype");
+@utility text-nav {
+  font-size: 15px;
+  line-height: 1.4;
   font-weight: 500;
-  font-style: normal;
-  font-display: swap;
 }
 
-@font-face {
-  font-family: "Inter";
-  src: url("/fonts/Inter/Inter Medium Italic.otf") format("opentype");
+@utility text-button {
+  font-size: 15px;
+  line-height: 1.4;
+  font-weight: 600;
+}
+
+@utility text-caption {
+  font-size: 13px;
+  line-height: 1.4;
   font-weight: 500;
-  font-style: italic;
-  font-display: swap;
 }
 
-@font-face {
-  font-family: "Inter";
-  src: url("/fonts/Inter/Inter SemiBold.otf") format("opentype");
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Inter";
-  src: url("/fonts/Inter/Inter SemiBold Italic.otf") format("opentype");
-  font-weight: 600;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Inter";
-  src: url("/fonts/Inter/Inter Bold.otf") format("opentype");
+@utility text-eyebrow {
+  font-size: 12px;
+  line-height: 1.4;
   font-weight: 700;
-  font-style: normal;
-  font-display: swap;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  @media (min-width: 1024px) {
+    font-size: 13px;
+  }
 }
 
-@font-face {
-  font-family: "Inter";
-  src: url("/fonts/Inter/Inter Bold Italic.otf") format("opentype");
+@utility text-logo {
+  font-size: 22px;
+  line-height: 1;
   font-weight: 700;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Inter";
-  src: url("/fonts/Inter/Inter ExtraBold.otf") format("opentype");
-  font-weight: 800;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Inter";
-  src: url("/fonts/Inter/Inter ExtraBold Italic.otf") format("opentype");
-  font-weight: 800;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Inter";
-  src: url("/fonts/Inter/Inter Black.otf") format("opentype");
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Inter";
-  src: url("/fonts/Inter/Inter Black Italic.otf") format("opentype");
-  font-weight: 900;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Inter";
-  src: url("/fonts/Inter/Inter Heavy.otf") format("opentype");
-  font-weight: 950;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Inter";
-  src: url("/fonts/Inter/Inter Heavy Italic.otf") format("opentype");
-  font-weight: 950;
-  font-style: italic;
-  font-display: swap;
-}
-
-/* Base modern scrollbar (Light Theme) */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f8fafc;
-  /* slate-50 */
-  border-radius: 0;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #b7b7b7;
-  border-radius: 0;
-  transition: background 0.2s ease-in-out;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #7c7c7c;
-}
-
-/* Dark Theme overrides for main scrollbar */
-[data-theme="dark"] ::-webkit-scrollbar-track {
-  background: #1d1d29;
-  /* zinc-950 */
-}
-
-[data-theme="dark"] ::-webkit-scrollbar-thumb {
-  background: #2b3545;
-  /* zinc-800 */
-}
-
-[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
-  background: #3f3f46;
-  /* zinc-700 */
-}
-
-
-/* Thin scrollbar (Light Theme) */
-.thin-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: #666666 transparent;
-}
-
-.thin-scrollbar::-webkit-scrollbar {
-  height: 4px;
-}
-
-.thin-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.thin-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #f3e8ff;
-  /* lilac/light purple */
-  border-radius: 999px;
-  border: 4px solid transparent;
-  background-clip: content-box;
-}
-
-.thin-scrollbar:hover::-webkit-scrollbar-thumb {
-  background-color: #d8b4fe;
-  /* lilac-400 */
-}
-
-/* Dark Theme overrides for thin scrollbar */
-[data-theme="dark"] .thin-scrollbar {
-  scrollbar-color: #3f3f46 transparent;
-  /* zinc-700 */
-}
-
-[data-theme="dark"] .thin-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #27272a;
-  /* zinc-800 */
-}
-
-[data-theme="dark"] .thin-scrollbar:hover::-webkit-scrollbar-thumb {
-  background-color: #3f3f46;
-  /* zinc-700 */
-}
-
-
-/* Overlay scrollbar */
-.overlay-scrollbar::-webkit-scrollbar {
-  height: 4px;
-  position: absolute;
-}
-
-button {
-  cursor: pointer;
-}
-
-button:disabled {
-  cursor: not-allowed;
+  letter-spacing: -0.02em;
 }
