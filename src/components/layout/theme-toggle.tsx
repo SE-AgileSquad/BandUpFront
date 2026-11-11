@@ -27,8 +27,13 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <Button variant="outline" size="icon" aria-label="Toggle theme" disabled>
-        <Sun className="size-4" />
+      <Button
+        variant="brand-outline"
+        size="icon-lg"
+        aria-label="Toggle theme"
+        disabled
+      >
+        <Sun className="size-5" />
       </Button>
     );
   }
@@ -38,8 +43,8 @@ export function ThemeToggle() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon" aria-label="Toggle theme">
-          <Icon className="size-4" />
+        <Button variant="brand-outline" size="icon-lg" aria-label="Toggle theme">
+          <Icon className="size-5" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

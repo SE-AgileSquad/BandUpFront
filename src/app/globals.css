@@ -67,11 +67,9 @@
 
 :root,
 .dark {
-  --gradient-primary: linear-gradient(
-    160deg,
-    var(--gradient-from) 0%,
-    var(--gradient-to) 71.4%
-  );
+  --gradient-primary: linear-gradient(160deg,
+      var(--gradient-from) 0%,
+      var(--gradient-to) 71.4%);
 }
 
 @theme inline {
@@ -119,22 +117,29 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   html {
     -webkit-text-size-adjust: 100%;
   }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
   body {
     @apply bg-background text-foreground font-sans antialiased;
     font-size: 16px;
     line-height: 24px;
-    letter-spacing: -0.005em;
     text-rendering: optimizeLegibility;
   }
+
   h1,
   h2,
   h3,
   h4 {
     @apply text-foreground;
-    text-wrap: balance;
   }
 }
 
@@ -146,7 +151,7 @@
   width: 100%;
   max-width: 1440px;
   margin-inline: auto;
-  padding-inline: 24px;
+  padding-inline: 20px;
   @media (min-width: 768px) {
     padding-inline: 40px;
   }
@@ -155,21 +160,10 @@
   }
 }
 
-@utility section-y {
-  padding-block: 56px;
-  @media (min-width: 768px) {
-    padding-block: 64px;
-  }
-  @media (min-width: 1024px) {
-    padding-block: 80px;
-  }
-}
-
 @utility text-display {
-  font-size: 40px;
-  line-height: 46px;
+  font-size: 42px;
+  line-height: 48px;
   font-weight: 700;
-  letter-spacing: -0.025em;
   @media (min-width: 768px) {
     font-size: 56px;
     line-height: 62px;
@@ -182,9 +176,8 @@
 
 @utility text-h1-cta {
   font-size: 32px;
-  line-height: 40px;
+  line-height: 38px;
   font-weight: 700;
-  letter-spacing: -0.02em;
   @media (min-width: 1024px) {
     font-size: 48px;
     line-height: 56px;
@@ -193,9 +186,8 @@
 
 @utility text-h2 {
   font-size: 30px;
-  line-height: 38px;
+  line-height: 36px;
   font-weight: 700;
-  letter-spacing: -0.02em;
   @media (min-width: 768px) {
     font-size: 36px;
     line-height: 44px;
@@ -207,10 +199,9 @@
 }
 
 @utility text-h3 {
-  font-size: 24px;
+  font-size: 26px;
   line-height: 32px;
   font-weight: 700;
-  letter-spacing: -0.015em;
   @media (min-width: 1024px) {
     font-size: 34px;
     line-height: 42px;
@@ -228,6 +219,7 @@
   line-height: 24px;
   font-weight: 400;
   color: var(--muted-foreground);
+
   @media (min-width: 1024px) {
     font-size: 17px;
     line-height: 26px;
@@ -268,7 +260,6 @@
   font-size: 12px;
   line-height: 1.4;
   font-weight: 700;
-  letter-spacing: 0.08em;
   text-transform: uppercase;
   @media (min-width: 1024px) {
     font-size: 13px;
@@ -279,5 +270,4 @@
   font-size: 22px;
   line-height: 1;
   font-weight: 700;
-  letter-spacing: -0.02em;
 }
