@@ -152,9 +152,11 @@
   max-width: 1440px;
   margin-inline: auto;
   padding-inline: 20px;
+
   @media (min-width: 768px) {
     padding-inline: 40px;
   }
+
   @media (min-width: 1024px) {
     padding-inline: 80px;
   }
@@ -164,10 +166,12 @@
   font-size: 42px;
   line-height: 48px;
   font-weight: 700;
+
   @media (min-width: 768px) {
     font-size: 56px;
     line-height: 62px;
   }
+
   @media (min-width: 1024px) {
     font-size: 68px;
     line-height: 74px;
@@ -178,6 +182,7 @@
   font-size: 32px;
   line-height: 38px;
   font-weight: 700;
+
   @media (min-width: 1024px) {
     font-size: 48px;
     line-height: 56px;
@@ -188,10 +193,12 @@
   font-size: 30px;
   line-height: 36px;
   font-weight: 700;
+
   @media (min-width: 768px) {
     font-size: 36px;
     line-height: 44px;
   }
+
   @media (min-width: 1024px) {
     font-size: 44px;
     line-height: 52px;
@@ -202,6 +209,7 @@
   font-size: 26px;
   line-height: 32px;
   font-weight: 700;
+
   @media (min-width: 1024px) {
     font-size: 34px;
     line-height: 42px;
@@ -261,6 +269,7 @@
   line-height: 1.4;
   font-weight: 700;
   text-transform: uppercase;
+
   @media (min-width: 1024px) {
     font-size: 13px;
   }
@@ -270,4 +279,33 @@
   font-size: 22px;
   line-height: 1;
   font-weight: 700;
+}
+
+@theme {
+  --animate-bandup-bounce: bandup-bounce 10s ease-in-out infinite;
+
+  @keyframes bandup-bounce {
+
+    0%,
+    88%,
+    100% {
+      transform: translateY(0);
+    }
+
+    2% {
+      transform: translateY(-5px);
+    }
+
+    4% {
+      transform: translateY(0);
+    }
+
+    6% {
+      transform: translateY(-3px);
+    }
+
+    8% {
+      transform: translateY(0);
+    }
+  }
 }
