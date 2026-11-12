@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AuthShell } from "@/components/auth/auth-shell";
+import { GuestOnly } from "@/components/auth/guest-only";
 import { RegisterForm } from "./components/register-form";
 import { REGISTER_METADATA } from "./constants/register";
 
@@ -9,8 +10,10 @@ export const metadata: Metadata = {
 
 export default function RegisterPage() {
     return (
-        <AuthShell>
-            <RegisterForm />
-        </AuthShell>
+        <GuestOnly>
+            <AuthShell>
+                <RegisterForm />
+            </AuthShell>
+        </GuestOnly>
     );
 }

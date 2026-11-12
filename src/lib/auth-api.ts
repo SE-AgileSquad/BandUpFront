@@ -3,6 +3,7 @@ import { api } from "@/lib/axios";
 import { mockSession } from "@/lib/mock-session";
 import { ApiError } from "@/types/api";
 import type { AuthUser } from "@/types/auth";
+import type { QueryClient } from "@tanstack/react-query";
 
 export const authKeys = { me: ["auth", "me"] as const };
 
@@ -16,4 +17,11 @@ export async function fetchMe(): Promise<AuthUser | null> {
         if (error instanceof ApiError && error.status === 401) return null;
         throw error;
     }
+}
+
+export function refreshAuth(queryClient: QueryClient) {
+  return queryClient.invalidateQueries({
+    queryKey: authKeys.me,
+    refetchType: "all",
+  });
 }

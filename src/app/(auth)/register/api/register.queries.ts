@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { authKeys } from "@/lib/auth-api";
 import { registerApi } from "./index";
 import type { RegisterPayload, ResendPayload, VerifyPayload } from "../types";
@@ -20,14 +20,9 @@ export function useRegisterMutation() {
 }
 
 export function useVerifyOtpMutation() {
-    const queryClient = useQueryClient();
-
     return useMutation({
         mutationKey: queryKeys.verify,
         mutationFn: (payload: VerifyPayload) => registerApi.verify(payload),
-        onSuccess: () => {
-            void queryClient.invalidateQueries({ queryKey: queryKeys.me });
-        },
     });
 }
 

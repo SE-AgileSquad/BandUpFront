@@ -5,14 +5,11 @@ import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCountdown } from "@/hooks/use-countdown";
+import type { OtpState } from "@/types/auth";
 import { OtpInput } from "./otp-input";
 import { StatusNotice } from "./status-notice";
 
-export type OtpState =
-    | { kind: "idle" }
-    | { kind: "wrong"; attemptsRemaining: number }
-    | { kind: "expired" }
-    | { kind: "locked"; lockedUntil: number };
+export type { OtpState };
 
 type OtpNotice = { title: string; description: string };
 
@@ -28,6 +25,11 @@ type OtpVerificationProps = {
     changeNumberHref: string;
     onVerify: (code: string) => void | Promise<void>;
     onResend: () => Promise<boolean>;
+    successTitle?: string;
+    successSubtitle?: string;
+    noticeTitle?: string;
+    noticeDescription?: string;
+    redirectingLabel?: string;
 };
 
 const IDLE: OtpState = { kind: "idle" };
@@ -48,6 +50,11 @@ export function OtpVerification({
     changeNumberHref,
     onVerify,
     onResend,
+    successTitle,
+    successSubtitle,
+    noticeTitle,
+    noticeDescription,
+    redirectingLabel,
 }: OtpVerificationProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const [code, setCode] = useState("");
@@ -84,10 +91,15 @@ export function OtpVerification({
 
     const locked = effective.kind === "locked";
     const expired = effective.kind === "expired";
+    const success = effective.kind === "success";
     const value = locked ? "" : code;
 
     const canVerify =
-        value.length === codeLength && !isVerifying && !locked && !expired;
+        value.length === codeLength &&
+        !isVerifying &&
+        !locked &&
+        !expired &&
+        !success;
     const canResend = !isResending && !locked && (expired || resend.isDone);
 
     function handleChange(next: string) {
@@ -132,9 +144,13 @@ export function OtpVerification({
             className="flex flex-col gap-[14px] lg:gap-[18px]"
         >
             <div className="flex flex-col gap-2">
-                <h1 className="text-auth-title">{title}</h1>
+                <h1 className="text-auth-title">
+                    {success ? (successTitle ?? title) : title}
+                </h1>
                 <p className="text-[15px] leading-[22px] text-muted-foreground">
-                    Enter the {codeLength}-digit code to continue.
+                    {success
+                        ? successSubtitle
+                        : `Enter the ${codeLength}-digit code to continue.`}
                 </p>
             </div>
 
@@ -147,8 +163,8 @@ export function OtpVerification({
                 value={value}
                 onChange={handleChange}
                 length={codeLength}
-                status={effective.kind === "idle" ? "default" : "error"}
-                disabled={locked}
+                status={effective.kind === "idle" || success ? "default" : "error"}
+                disabled={locked || success}
                 autoFocus
             />
 
@@ -181,37 +197,56 @@ export function OtpVerification({
                     description={notice.description}
                 />
             )}
+            {success && (
+                <StatusNotice
+                    variant="success"
+                    title={noticeTitle ?? ""}
+                    description={noticeDescription ?? ""}
+                />
+            )}
 
-            <Button
-                type="submit"
-                variant="gradient"
-                size="default"
-                className="w-full"
-                disabled={!canVerify}
-                aria-busy={isVerifying}
-            >
-                {isVerifying && <Loader2 aria-hidden className="size-5 animate-spin" />}
-                Verify code
-            </Button>
+            {success ? (
+                <p
+                    role="status"
+                    className="flex items-center justify-center gap-2 text-[14px] leading-[21px] text-muted-foreground"
+                >
+                    <Loader2 aria-hidden className="size-4 animate-spin" />
+                    {redirectingLabel}
+                </p>
+            ) : (
+                <>
+                    <Button
+                        type="submit"
+                        variant="gradient"
+                        size="default"
+                        className="w-full"
+                        disabled={!canVerify}
+                        aria-busy={isVerifying}
+                    >
+                        {isVerifying && <Loader2 aria-hidden className="size-5 animate-spin" />}
+                        Verify code
+                    </Button>
 
-            <Button
-                type="button"
-                variant="brand-outline"
-                size="default"
-                className="w-full"
-                disabled={!canResend}
-                onClick={handleResend}
-            >
-                {isResending && <Loader2 aria-hidden className="size-5 animate-spin" />}
-                {resendLabel}
-            </Button>
+                    <Button
+                        type="button"
+                        variant="brand-outline"
+                        size="default"
+                        className="w-full"
+                        disabled={!canResend}
+                        onClick={handleResend}
+                    >
+                        {isResending && <Loader2 aria-hidden className="size-5 animate-spin" />}
+                        {resendLabel}
+                    </Button>
 
-            <Link
-                href={changeNumberHref}
-                className="self-center rounded-sm text-[14px] leading-[21px] font-medium text-primary outline-none hover:underline focus-visible:ring-2 focus-visible:ring-primary/25"
-            >
-                Change number
-            </Link>
+                    <Link
+                        href={changeNumberHref}
+                        className="self-center rounded-sm text-[14px] leading-[21px] font-medium text-primary outline-none hover:underline focus-visible:ring-2 focus-visible:ring-primary/25"
+                    >
+                        Change number
+                    </Link>
+                </>
+            )}
 
             <p aria-live="polite" className="sr-only">
                 {announced ? "You can request a new code" : ""}

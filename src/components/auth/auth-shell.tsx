@@ -1,17 +1,23 @@
 import { ThemeToggle } from "@/components/layout/theme-toggle";
-import { MobileBand, WelcomePanel } from "./welcome-panel";
+import { MobileBand, WelcomePanel, type PanelMascot } from "./welcome-panel";
 
 type AuthShellProps = {
     headline?: string;
     description?: string;
+    mascot?: PanelMascot;
     children: React.ReactNode;
 };
 
-export function AuthShell({ headline, description, children }: AuthShellProps) {
+export function AuthShell({
+    headline,
+    description,
+    mascot,
+    children,
+}: AuthShellProps) {
     return (
         <div className="flex min-h-screen flex-col lg:flex-row">
-            <MobileBand />
-            <WelcomePanel headline={headline} description={description} />
+            <MobileBand mascot={mascot} />
+            <WelcomePanel headline={headline} description={description} mascot={mascot} />
             <div className="relative flex flex-1 flex-col lg:items-center lg:justify-center lg:px-6">
                 <div className="absolute top-6 right-6 hidden lg:block">
                     <ThemeToggle />

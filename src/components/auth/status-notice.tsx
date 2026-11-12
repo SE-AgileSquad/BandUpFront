@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
-import { CircleAlert, CircleCheck } from "lucide-react";
+import { CircleAlert, CircleCheck, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type StatusNoticeProps = {
-    variant: "error" | "success";
+    variant: "error" | "success" | "info";
     title: string;
     description: string;
     icon?: ReactNode;
@@ -19,6 +19,11 @@ const variants = {
     success: {
         box: "border-success bg-success-bg text-success",
         Icon: CircleCheck,
+        role: "status",
+    },
+    info: {
+        box: "border-primary bg-primary-soft text-primary",
+        Icon: Info,
         role: "status",
     },
 } as const;

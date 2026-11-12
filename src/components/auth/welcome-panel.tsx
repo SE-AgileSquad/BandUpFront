@@ -1,9 +1,11 @@
 import Link from "next/link";
-import { ImageSlot } from "@/components/shared/image-slot";
+import { ImageSlot, type ImageSlotProps } from "@/components/shared/image-slot";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { AUTH_PANEL } from "@/constants/auth";
 import { ROUTES } from "@/constants/routes";
 import { LogoAlt } from "../layout/logo-alt";
+
+export type PanelMascot = { src: ImageSlotProps["src"]; alt: string };
 
 export function GradientLogo() {
     return (
@@ -26,11 +28,13 @@ export function GradientLogo() {
 type WelcomePanelProps = {
     headline?: string;
     description?: string;
+    mascot?: PanelMascot;
 };
 
 export function WelcomePanel({
     headline = AUTH_PANEL.headline,
     description = AUTH_PANEL.description,
+    mascot = AUTH_PANEL.mascot,
 }: WelcomePanelProps) {
     return (
         <aside className="hidden w-[600px] shrink-0 flex-col justify-between rounded-r-[48px] bg-gradient-primary px-14 py-12 text-primary-foreground lg:flex">
@@ -38,12 +42,12 @@ export function WelcomePanel({
             <div className="flex flex-col items-center gap-[14px]">
                 <p className="max-w-[488px] text-auth-heading">{headline}</p>
                 <p className="max-w-[488px] text-body opacity-[0.82]">{description}</p>
-                <div className="relative size-[450px] -mb-24 mr-24">
+                <div className="relative size-[450px]">
                     <ImageSlot
-                        src={AUTH_PANEL.mascot.src}
-                        alt={AUTH_PANEL.mascot.alt}
+                        src={mascot.src}
+                        alt={mascot.alt}
                         sizes="450px"
-                        className=""
+                        className="rounded-frame -ml-10"
                     />
                 </div>
             </div>
@@ -62,7 +66,7 @@ export function WelcomePanel({
     );
 }
 
-export function MobileBand() {
+export function MobileBand({ mascot = AUTH_PANEL.mascot }: { mascot?: PanelMascot }) {
     return (
         <div className="rounded-b-[40px] bg-gradient-primary px-6 py-5 text-primary-foreground lg:hidden">
             <div className="flex items-center justify-between">
@@ -71,8 +75,8 @@ export function MobileBand() {
             </div>
             <div className="relative mx-auto mt-4 size-[170px]">
                 <ImageSlot
-                    src={AUTH_PANEL.mascot.src}
-                    alt={AUTH_PANEL.mascot.alt}
+                    src={mascot.src}
+                    alt={mascot.alt}
                     sizes="170px"
                     className="rounded-frame"
                 />

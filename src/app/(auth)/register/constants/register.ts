@@ -77,10 +77,11 @@ export const VERIFY_COPY = {
 export const SUCCESS_COPY = {
     title: "You’re all set!",
     subtitle: "Your phone is verified. Your first 3 Writing checks are on us.",
+    imageSrc: "/images/auth/img_mascot_celebrating.png",
     imageAlt: "BandUp mascot celebrating",
     notice: {
         title: "Welcome to BandUp",
-        description: "3 free Writing checks · No card needed",
+        description: "",
     },
-    cta: "Start my learning path →",
+    redirecting: "Taking you to your dashboard…",
 } as const;

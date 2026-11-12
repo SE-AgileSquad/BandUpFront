@@ -1,4 +1,4 @@
-import type { AuthUser } from "@/types/auth";
+import type { AuthUser, OtpChallenge, OtpErrorCode } from "@/types/auth";
 
 export type RegisterPayload = {
     fullName: string;
@@ -22,13 +22,6 @@ export type VerifyResponse = { user: AuthUser };
 export type ResendPayload = { verificationId: string };
 export type ResendResponse = { expiresAt: string; resendAvailableAt: string };
 
-export type RegisterErrorCode =
-    | "PHONE_ALREADY_REGISTERED"
-    | "INVALID_CODE"
-    | "CODE_EXPIRED"
-    | "TOO_MANY_ATTEMPTS"
-    | "RESEND_TOO_SOON";
-
 export type FieldErrors = Record<string, string | string[]>;
 
 export type RegisterApi = {
@@ -37,12 +30,10 @@ export type RegisterApi = {
     resend: (payload: ResendPayload) => Promise<ResendResponse>;
 };
 
-export type VerificationSession = {
-    verificationId: string;
-    phone: string;
-    maskedPhone: string;
-    fullName: string;
-    expiresAt: number;
-    resendAvailableAt: number;
-    lockedUntil: number | null;
+
+export type RegisterErrorCode = "PHONE_ALREADY_REGISTERED" | OtpErrorCode;
+
+export type VerificationSession = OtpChallenge & {
+  phone: string;
+  fullName: string;
 };

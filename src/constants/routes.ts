@@ -4,6 +4,7 @@ export const ROUTES = {
   REGISTER: "/register",
   REGISTER_VERIFY: "/register/verify",
   REGISTER_SUCCESS: "/register/success",
+  LOGIN_VERIFY: "/login/verify",
   FORGOT_PASSWORD: "/forgot-password",
   DASHBOARD: "/dashboard",
   LESSONS: "/lessons",
