@@ -15,7 +15,7 @@ type OtpNotice = { title: string; description: string };
 
 type OtpVerificationProps = {
     title?: string;
-    maskedPhone: string;
+    maskedEmail: string;
     codeLength?: number;
     state: OtpState;
     resendAvailableAt: number | null;
@@ -40,7 +40,7 @@ function Timer({ value }: { value: string }) {
 
 export function OtpVerification({
     title = "Check your messages",
-    maskedPhone,
+    maskedEmail,
     codeLength = 5,
     state,
     resendAvailableAt,
@@ -155,7 +155,7 @@ export function OtpVerification({
             </div>
 
             <p className="text-[14px] leading-[21px] font-semibold">
-                Code sent to {maskedPhone}
+                Code sent to {maskedEmail}
             </p>
 
             <OtpInput
@@ -187,7 +187,7 @@ export function OtpVerification({
                 <StatusNotice
                     variant="error"
                     title="Too many attempts"
-                    description="Verification is locked. Try again in 15 minutes. Your phone number has been kept."
+                    description="Verification is locked. Try again in 15 minutes. Your email address has been kept."
                 />
             )}
             {notice && (

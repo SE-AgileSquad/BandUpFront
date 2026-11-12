@@ -59,14 +59,14 @@ function VerifyContent({ challenge, next, onLeave }: VerifyContentProps) {
 
     return (
         <OtpVerification
-            maskedPhone={challenge.maskedPhone}
+            maskedEmail={challenge.maskedEmail}
             codeLength={LOGIN_LIMITS.codeLength}
             state={otp.state}
             resendAvailableAt={otp.resendAvailableAt}
             isVerifying={otp.isVerifying}
             isResending={otp.isResending}
             notice={otp.notice}
-            changeNumberHref={withParams(ROUTES.LOGIN, { method: "sms", next })}
+            changeNumberHref={withParams(ROUTES.LOGIN, { method: "email", next })}
             onVerify={otp.verify}
             onResend={otp.resend}
             successTitle={copy.title}
@@ -86,7 +86,7 @@ export function VerifyView({ next }: { next: string | null }) {
 
     useEffect(() => {
         if (ready && !challenge && !leaving.current) {
-            router.replace(withParams(ROUTES.LOGIN, { method: "sms", next }));
+            router.replace(withParams(ROUTES.LOGIN, { method: "email", next }));
         }
     }, [ready, challenge, next, router]);
 

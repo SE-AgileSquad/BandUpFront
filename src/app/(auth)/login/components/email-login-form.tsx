@@ -10,15 +10,15 @@ import { CaptchaField } from "@/components/auth/captcha-field";
 import { FieldInput, FormField } from "@/components/auth/form-field";
 import { StatusNotice } from "@/components/auth/status-notice";
 import { ROUTES } from "@/constants/routes";
-import { normalizePhone } from "@/lib/phone";
+import { normalizeEmail } from "@/lib/email";
 import { withParams } from "@/lib/safe-redirect";
 import { ApiError } from "@/types/api";
 import { useSendLoginCodeMutation } from "../api/login.queries";
 import { LOGIN_COPY } from "../constants/login";
 import { useLoginFlow } from "../hooks/use-login-flow";
-import { smsLoginSchema, type SmsLoginValues } from "../schemas/login.schema";
+import { emailLoginSchema, type EmailLoginValues } from "../schemas/login.schema";
 
-export function SmsLoginForm({ next }: { next: string | null }) {
+export function EmailLoginForm({ next }: { next: string | null }) {
     const router = useRouter();
     const mutation = useSendLoginCodeMutation();
     const [generalError, setGeneralError] = useState(false);
@@ -31,12 +31,12 @@ export function SmsLoginForm({ next }: { next: string | null }) {
         setValue,
         watch,
         formState: { errors, isSubmitted },
-    } = useForm<SmsLoginValues>({
-        resolver: zodResolver(smsLoginSchema),
+    } = useForm<EmailLoginValues>({
+        resolver: zodResolver(emailLoginSchema),
         mode: "onSubmit",
         reValidateMode: "onChange",
         defaultValues: {
-            phone: useLoginFlow.getState().phone,
+            email: useLoginFlow.getState().email,
             captchaToken: null,
         },
     });
@@ -44,7 +44,7 @@ export function SmsLoginForm({ next }: { next: string | null }) {
     useEffect(() => {
         const subscription = watch((values, { name }) => {
             setGeneralError(false);
-            if (name === "phone") useLoginFlow.getState().setPhone(values.phone ?? "");
+            if (name === "email") useLoginFlow.getState().setEmail(values.email ?? "");
         });
         return () => subscription.unsubscribe();
     }, [watch]);
@@ -55,21 +55,21 @@ export function SmsLoginForm({ next }: { next: string | null }) {
     const onSubmit = handleSubmit(async (values) => {
         setGeneralError(false);
 
-        const phone = normalizePhone(values.phone);
-        if (!phone) {
-            setError("phone", { message: LOGIN_COPY.errors.phone }, { shouldFocus: true });
+        const email = normalizeEmail(values.email);
+        if (!email) {
+            setError("email", { message: LOGIN_COPY.errors.email }, { shouldFocus: true });
             return;
         }
 
         try {
             const response = await mutation.mutateAsync({
-                phone,
+                email,
                 captchaToken: values.captchaToken ?? "",
             });
 
-            useLoginFlow.getState().startChallenge(phone, {
+            useLoginFlow.getState().startChallenge(email, {
                 verificationId: response.verificationId,
-                maskedPhone: response.maskedPhone,
+                maskedEmail: response.maskedEmail,
                 expiresAt: Date.parse(response.expiresAt),
                 resendAvailableAt: Date.parse(response.resendAvailableAt),
                 lockedUntil: null,
@@ -97,13 +97,13 @@ export function SmsLoginForm({ next }: { next: string | null }) {
             noValidate
             className="flex flex-col gap-[14px] lg:gap-[18px]"
         >
-            <FormField label={fields.phone.label} error={errors.phone?.message}>
+            <FormField label={fields.email.label} error={errors.email?.message}>
                 <FieldInput
-                    type="tel"
-                    inputMode="tel"
-                    placeholder={fields.phone.placeholder}
-                    autoComplete="tel"
-                    {...register("phone")}
+                    type="email"
+                    inputMode="email"
+                    placeholder={fields.email.placeholder}
+                    autoComplete="email"
+                    {...register("email")}
                 />
             </FormField>
 
@@ -139,10 +139,10 @@ export function SmsLoginForm({ next }: { next: string | null }) {
                 {mutation.isPending ? (
                     <>
                         <Loader2 aria-hidden className="size-5 animate-spin" />
-                        {LOGIN_COPY.sendingSms}
+                    {LOGIN_COPY.sendingEmail}
                     </>
                 ) : (
-                    LOGIN_COPY.submitSms
+                    LOGIN_COPY.submitEmail
                 )}
             </Button>
         </form>

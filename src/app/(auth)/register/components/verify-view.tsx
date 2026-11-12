@@ -44,7 +44,7 @@ function VerifyContent({ session }: { session: VerificationSession }) {
 
   return (
     <OtpVerification
-      maskedPhone={session.maskedPhone}
+      maskedEmail={session.maskedEmail}
       codeLength={REGISTER_LIMITS.codeLength}
       state={succeeded ? IDLE : otp.state}
       resendAvailableAt={otp.resendAvailableAt}

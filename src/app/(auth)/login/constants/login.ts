@@ -2,7 +2,7 @@ import type { ImageSlotProps } from "@/components/shared/image-slot";
 
 export const LOGIN_METADATA = {
     login: "Sign in · BandUp",
-    verify: "Verify your phone · BandUp",
+    verify: "Verify your email · BandUp",
 } as const;
 
 export const LOGIN_LIMITS = {
@@ -13,7 +13,7 @@ export const LOGIN_LIMITS = {
     maxWrongAttempts: 3,
 } as const;
 
-export const MOCK_LOGIN_PHONE = "+989120000000";
+export const MOCK_LOGIN_EMAIL = "student@bandup.test";
 export const MOCK_LOGIN_PASSWORD = "Password1";
 export const MOCK_VALID_CODE = "12345";
 export const MOCK_EXPIRED_CODE = "00000";
@@ -30,25 +30,25 @@ export const LOGIN_COPY = {
     title: "Welcome back",
     subtitle: "Sign in to pick up where you left off.",
     tabsLabel: "Sign-in method",
-    tabs: { password: "Password", sms: "SMS code" },
+    tabs: { password: "Password", email: "Email code" },
     fields: {
-        phone: { label: "Phone number", placeholder: "+98 912 000 0000" },
+        email: { label: "Email", placeholder: "you@example.com" },
         password: { label: "Password", placeholder: "Your password" },
     },
     errors: {
-        phone: "Check the phone number format.",
+        email: "Check the email format.",
         password: "Enter your password.",
         captcha: "Complete the CAPTCHA to continue.",
     },
     forgot: "Forgot password?",
     submitPassword: "Sign in →",
     submittingPassword: "Signing in…",
-    submitSms: "Send code",
-    sendingSms: "Sending code…",
+    submitEmail: "Send code",
+    sendingEmail: "Sending code…",
     signUp: { prompt: "New to BandUp?", link: "Create account" },
     invalidCredentials: {
         title: "Couldn’t sign in",
-        description: "Phone number or password is incorrect",
+        description: "Email or password is incorrect",
     },
     generalError: {
         title: "Something went wrong",
@@ -81,7 +81,7 @@ export const LOGIN_VERIFY_COPY = {
             "We couldn’t send a new code. Check your connection and try again.",
     },
     success: {
-        title: "Phone verified",
+        title: "Email verified",
         subtitleResume: "You’re signed in. Your saved practice is ready.",
         subtitleDefault: "You’re signed in.",
         noticeTitle: "Verification successful",

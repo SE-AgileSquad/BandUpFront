@@ -13,9 +13,9 @@ import type {
 export const queryKeys = {
     me: authKeys.me,
     login: ["auth", "login"] as const,
-    sendCode: ["auth", "login", "sms", "send"] as const,
-    verifyCode: ["auth", "login", "sms", "verify"] as const,
-    resendCode: ["auth", "login", "sms", "resend"] as const,
+    sendCode: ["auth", "login", "email", "send"] as const,
+    verifyCode: ["auth", "login", "email", "verify"] as const,
+    resendCode: ["auth", "login", "email", "resend"] as const,
 };
 
 export function useLoginMutation() {

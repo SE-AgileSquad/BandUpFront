@@ -12,7 +12,7 @@ import { FieldInput, FormField } from "@/components/auth/form-field";
 import { PasswordInput } from "@/components/auth/password-input";
 import { StatusNotice } from "@/components/auth/status-notice";
 import { ROUTES } from "@/constants/routes";
-import { normalizePhone } from "@/lib/phone";
+import { normalizeEmail } from "@/lib/email";
 import { ApiError } from "@/types/api";
 import { useRegisterMutation } from "../api/register.queries";
 import { REGISTER_COPY } from "../constants/register";
@@ -26,7 +26,7 @@ import { TermsField } from "./terms-field";
 
 const defaultValues: RegisterFormValues = {
     fullName: "",
-    phone: "",
+    email: "",
     password: "",
     captchaToken: null,
     acceptedTerms: false,
@@ -39,7 +39,7 @@ export function RegisterForm() {
     const ready = useRegisterFlowReady();
     const startVerification = useRegisterFlow((state) => state.startVerification);
     const mutation = useRegisterMutation();
-    const [phoneTaken, setPhoneTaken] = useState(false);
+    const [emailTaken, setEmailTaken] = useState(false);
     const [generalError, setGeneralError] = useState(false);
 
     const {
@@ -60,21 +60,21 @@ export function RegisterForm() {
     useEffect(() => {
         if (!ready) return;
         const session = useRegisterFlow.getState().session;
-        if (!session || getValues("fullName") || getValues("phone")) return;
+        if (!session || getValues("fullName") || getValues("email")) return;
         setValue("fullName", session.fullName);
-        setValue("phone", session.phone);
+        setValue("email", session.email);
     }, [ready, getValues, setValue]);
 
     const hasErrors = Object.keys(errors).length > 0;
     const submitDisabled = mutation.isPending || (isSubmitted && hasErrors);
 
     const onSubmit = handleSubmit(async (values) => {
-        setPhoneTaken(false);
+        setEmailTaken(false);
         setGeneralError(false);
 
-        const phone = normalizePhone(values.phone);
-        if (!phone) {
-            setError("phone", { message: REGISTER_COPY.errors.phone }, { shouldFocus: true });
+        const email = normalizeEmail(values.email);
+        if (!email) {
+            setError("email", { message: REGISTER_COPY.errors.email }, { shouldFocus: true });
             return;
         }
 
@@ -82,7 +82,7 @@ export function RegisterForm() {
             const fullName = values.fullName.trim();
             const response = await mutation.mutateAsync({
                 fullName,
-                phone,
+                email,
                 password: values.password,
                 captchaToken: values.captchaToken ?? "",
                 acceptedTerms: true,
@@ -90,8 +90,8 @@ export function RegisterForm() {
 
             startVerification({
                 verificationId: response.verificationId,
-                phone,
-                maskedPhone: response.maskedPhone,
+                email,
+                maskedEmail: response.maskedEmail,
                 fullName,
                 expiresAt: Date.parse(response.expiresAt),
                 resendAvailableAt: Date.parse(response.resendAvailableAt),
@@ -100,8 +100,8 @@ export function RegisterForm() {
             router.push(ROUTES.REGISTER_VERIFY);
         } catch (error) {
             if (error instanceof ApiError) {
-                if (error.status === 409 && error.code === "PHONE_ALREADY_REGISTERED") {
-                    setPhoneTaken(true);
+                if (error.status === 409 && error.code === "EMAIL_ALREADY_REGISTERED") {
+                    setEmailTaken(true);
                     return;
                 }
 
@@ -151,13 +151,13 @@ export function RegisterForm() {
                     />
                 </FormField>
 
-                <FormField label={fields.phone.label} error={errors.phone?.message}>
+                <FormField label={fields.email.label} error={errors.email?.message}>
                     <FieldInput
-                        type="tel"
-                        inputMode="tel"
-                        placeholder={fields.phone.placeholder}
-                        autoComplete="tel"
-                        {...register("phone", { onChange: () => setPhoneTaken(false) })}
+                        type="email"
+                        inputMode="email"
+                        placeholder={fields.email.placeholder}
+                        autoComplete="email"
+                        {...register("email", { onChange: () => setEmailTaken(false) })}
                     />
                 </FormField>
 
@@ -190,11 +190,11 @@ export function RegisterForm() {
                     {...register("acceptedTerms")}
                 />
 
-                {phoneTaken && (
+                {emailTaken && (
                     <StatusNotice
                         variant="error"
-                        title={REGISTER_COPY.phoneTaken.title}
-                        description={REGISTER_COPY.phoneTaken.description}
+                        title={REGISTER_COPY.emailTaken.title}
+                        description={REGISTER_COPY.emailTaken.description}
                     />
                 )}
                 {generalError && (
@@ -223,22 +223,22 @@ export function RegisterForm() {
                     )}
                 </Button>
 
-                {phoneTaken && (
+                {emailTaken && (
                     <>
                         <Button asChild variant="brand-outline" size="default" className="w-full">
-                            <Link href={ROUTES.LOGIN}>{REGISTER_COPY.phoneTaken.signIn}</Link>
+                            <Link href={ROUTES.LOGIN}>{REGISTER_COPY.emailTaken.signIn}</Link>
                         </Button>
                         <Link
                             href={ROUTES.FORGOT_PASSWORD}
                             className="self-center rounded-sm text-[15px] leading-[22px] font-medium text-primary outline-none hover:underline focus-visible:ring-2 focus-visible:ring-primary/25"
                         >
-                            {REGISTER_COPY.phoneTaken.reset}
+                            {REGISTER_COPY.emailTaken.reset}
                         </Link>
                     </>
                 )}
             </form>
 
-            {!phoneTaken && (
+            {!emailTaken && (
                 <p className="flex items-center justify-center gap-1.5 text-[14px] leading-[21px]">
                     <span className="text-muted-foreground">
                         {REGISTER_COPY.login.prompt}

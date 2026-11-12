@@ -1,4 +1,3 @@
-import { maskPhone } from "@/lib/phone";
 import { mockSession } from "@/lib/mock-session";
 import { ApiError } from "@/types/api";
 import type { AuthUser } from "@/types/auth";
@@ -6,13 +5,14 @@ import {
     LOGIN_LIMITS,
     MOCK_EXPIRED_CODE,
     MOCK_LOGIN_PASSWORD,
-    MOCK_LOGIN_PHONE,
+    MOCK_LOGIN_EMAIL,
     MOCK_VALID_CODE,
 } from "../constants/login";
 import type { LoginApi, LoginErrorCode } from "../types";
+import { maskEmail } from "@/lib/email";
 
 type MockChallenge = {
-    phone: string;
+    email: string;
     wrongAttempts: number;
     lockedUntil: number | null;
 };
@@ -30,39 +30,39 @@ function fail(
     throw new ApiError(code, status, code, { code, ...extra });
 }
 
-function mockUser(phone: string): AuthUser {
-    return { id: `mock-user-${phone}`, fullName: "BandUp Student", phone };
+function mockUser(email: string): AuthUser {
+    return { id: `mock-user-${email}`, fullName: "BandUp Student", email };
 }
 
 function getChallenge(id: string) {
     let entry = challenges.get(id);
     if (!entry) {
-        entry = { phone: MOCK_LOGIN_PHONE, wrongAttempts: 0, lockedUntil: null };
+        entry = { email: MOCK_LOGIN_EMAIL, wrongAttempts: 0, lockedUntil: null };
         challenges.set(id, entry);
     }
     return entry;
 }
 
 export const loginApi: LoginApi = {
-    async login({ phone, password }) {
+    async login({ email, password }) {
         await delay();
-        if (phone !== MOCK_LOGIN_PHONE || password !== MOCK_LOGIN_PASSWORD) {
+        if (email !== MOCK_LOGIN_EMAIL || password !== MOCK_LOGIN_PASSWORD) {
             fail(401, "INVALID_CREDENTIALS");
         }
-        const user = mockUser(phone);
+        const user = mockUser(email);
         mockSession.set(user);
         return { user };
     },
 
-    async sendCode({ phone }) {
+    async sendCode({ email }) {
         await delay();
         const verificationId = `mock-login-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-        challenges.set(verificationId, { phone, wrongAttempts: 0, lockedUntil: null });
+        challenges.set(verificationId, { email, wrongAttempts: 0, lockedUntil: null });
 
         const now = Date.now();
         return {
             verificationId,
-            maskedPhone: maskPhone(phone),
+            maskedEmail: maskEmail(email),
             codeLength: 5,
             expiresAt: iso(now + LOGIN_LIMITS.codeTtlMs),
             resendAvailableAt: iso(now + LOGIN_LIMITS.resendCooldownMs),
@@ -78,7 +78,7 @@ export const loginApi: LoginApi = {
         }
 
         if (code === MOCK_VALID_CODE) {
-            const user = mockUser(entry.phone);
+            const user = mockUser(entry.email);
             mockSession.set(user);
             return { user };
         }

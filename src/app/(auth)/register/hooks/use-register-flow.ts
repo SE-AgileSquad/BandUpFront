@@ -36,7 +36,7 @@ export const useRegisterFlow = create<RegisterFlowState>()(
             reset: () => set(initialState),
         }),
         {
-            name: "bandup-register-flow",
+            name: "bandup-register-flow-v2",
             storage: createJSONStorage(() => sessionStorage),
             skipHydration: true,
             partialize: (state) => ({

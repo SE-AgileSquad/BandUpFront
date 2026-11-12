@@ -14,7 +14,7 @@ type LoginMethodTabsProps = {
     value: LoginMethod;
     onValueChange: (method: LoginMethod) => void;
     password: ReactNode;
-    sms: ReactNode;
+    email: ReactNode;
 };
 
 const triggerClass =
@@ -24,7 +24,7 @@ export function LoginMethodTabs({
     value,
     onValueChange,
     password,
-    sms,
+    email,
 }: LoginMethodTabsProps) {
     return (
         <Tabs
@@ -38,12 +38,12 @@ export function LoginMethodTabs({
                 <TabsTrigger value="password" className={triggerClass}>
                     {LOGIN_COPY.tabs.password}
                 </TabsTrigger>
-                <TabsTrigger value="sms" className={triggerClass}>
-                    {LOGIN_COPY.tabs.sms}
+                <TabsTrigger value="email" className={triggerClass}>
+                    {LOGIN_COPY.tabs.email}
                 </TabsTrigger>
             </TabsList>
             <TabsContent value="password">{password}</TabsContent>
-            <TabsContent value="sms">{sms}</TabsContent>
+            <TabsContent value="email">{email}</TabsContent>
         </Tabs>
     );
 }

@@ -11,7 +11,7 @@ export function LoginRoute() {
     const searchParams = useSearchParams();
     const next = sanitizeNextPath(searchParams.get("next"));
     const reason = searchParams.get("reason") === "session-expired" ? "session-expired" : null;
-    const method = searchParams.get("method") === "sms" ? "sms" : "password";
+    const method = searchParams.get("method") === "email" ? "email" : "password";
 
     return (
         <GuestOnly next={next}>

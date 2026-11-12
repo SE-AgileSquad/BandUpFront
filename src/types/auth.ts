@@ -1,7 +1,7 @@
 export type AuthUser = {
   id: string;
   fullName: string;
-  phone: string;
+  email: string;
 };
 
 export type OtpErrorCode =
@@ -12,7 +12,7 @@ export type OtpErrorCode =
 
 export type OtpChallenge = {
   verificationId: string;
-  maskedPhone: string;
+  maskedEmail: string;
   expiresAt: number;
   resendAvailableAt: number;
   lockedUntil: number | null;

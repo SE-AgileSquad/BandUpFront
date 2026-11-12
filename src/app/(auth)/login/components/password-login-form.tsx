@@ -14,7 +14,7 @@ import { PasswordInput } from "@/components/auth/password-input";
 import { StatusNotice } from "@/components/auth/status-notice";
 import { ROUTES } from "@/constants/routes";
 import { refreshAuth } from "@/lib/auth-api";
-import { normalizePhone } from "@/lib/phone";
+import { normalizeEmail } from "@/lib/email";
 import { ApiError } from "@/types/api";
 import { useLoginMutation } from "../api/login.queries";
 import { LOGIN_COPY } from "../constants/login";
@@ -45,7 +45,7 @@ export function PasswordLoginForm({ next }: { next: string | null }) {
         mode: "onSubmit",
         reValidateMode: "onChange",
         defaultValues: {
-            phone: useLoginFlow.getState().phone,
+            email: useLoginFlow.getState().email,
             password: "",
             captchaToken: null,
         },
@@ -54,7 +54,7 @@ export function PasswordLoginForm({ next }: { next: string | null }) {
     useEffect(() => {
         const subscription = watch((values, { name }) => {
             setNotice(null);
-            if (name === "phone") useLoginFlow.getState().setPhone(values.phone ?? "");
+            if (name === "email") useLoginFlow.getState().setEmail(values.email ?? "");
         });
         return () => subscription.unsubscribe();
     }, [watch]);
@@ -65,15 +65,15 @@ export function PasswordLoginForm({ next }: { next: string | null }) {
     const onSubmit = handleSubmit(async (values) => {
         setNotice(null);
 
-        const phone = normalizePhone(values.phone);
-        if (!phone) {
-            setError("phone", { message: LOGIN_COPY.errors.phone }, { shouldFocus: true });
+        const email = normalizeEmail(values.email);
+        if (!email) {
+            setError("email", { message: LOGIN_COPY.errors.email }, { shouldFocus: true });
             return;
         }
 
         try {
             await mutation.mutateAsync({
-                phone,
+                email,
                 password: values.password,
                 captchaToken: values.captchaToken ?? "",
             });
@@ -104,13 +104,13 @@ export function PasswordLoginForm({ next }: { next: string | null }) {
             noValidate
             className="flex flex-col gap-[14px] lg:gap-[18px]"
         >
-            <FormField label={fields.phone.label} error={errors.phone?.message}>
+            <FormField label={fields.email.label} error={errors.email?.message}>
                 <FieldInput
-                    type="tel"
-                    inputMode="tel"
-                    placeholder={fields.phone.placeholder}
+                    type="email"
+                    inputMode="email"
+                    placeholder={fields.email.placeholder}
                     autoComplete="username"
-                    {...register("phone")}
+                    {...register("email")}
                 />
             </FormField>
 

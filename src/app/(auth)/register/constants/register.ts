@@ -1,6 +1,6 @@
 export const REGISTER_METADATA = {
     register: "Create your account · BandUp",
-    verify: "Verify your phone · BandUp",
+    verify: "Verify your email · BandUp",
     success: "You’re all set · BandUp",
 } as const;
 
@@ -13,7 +13,7 @@ export const REGISTER_LIMITS = {
     maxWrongAttempts: 3,
 } as const;
 
-export const MOCK_TAKEN_PHONE = "+989120000000";
+export const MOCK_TAKEN_EMAIL = "taken@bandup.test";
 export const MOCK_VALID_CODE = "12345";
 export const MOCK_EXPIRED_CODE = "00000";
 
@@ -22,7 +22,7 @@ export const REGISTER_COPY = {
     subtitle: "Start with 3 free Writing checks and your first Reading passage.",
     fields: {
         fullName: { label: "Full name", placeholder: "Your name" },
-        phone: { label: "Phone number", placeholder: "+98 912 000 0000" },
+        email: { label: "Email", placeholder: "you@example.com" },
         password: {
             label: "Password",
             placeholder: "At least 8 characters",
@@ -31,7 +31,7 @@ export const REGISTER_COPY = {
     },
     errors: {
         fullName: "Enter your first and last name.",
-        phone: "Enter a valid phone number.",
+        email: "Enter a valid email.",
         passwordLength: "Use at least 8 characters.",
         passwordMix: "Include both letters and numbers.",
         captcha: "Complete the CAPTCHA to continue.",
@@ -47,10 +47,10 @@ export const REGISTER_COPY = {
     submit: "Create account →",
     submitting: "Creating account…",
     login: { prompt: "Already have an account?", link: "Log in" },
-    phoneTaken: {
-        title: "Phone already registered",
+    emailTaken: {
+        title: "Email already registered",
         description:
-            "An account already uses this phone number. Sign in or reset your password.",
+            "An account already uses this email. Sign in or reset your password.",
         signIn: "Sign in instead",
         reset: "Reset password",
     },
@@ -76,7 +76,7 @@ export const VERIFY_COPY = {
 
 export const SUCCESS_COPY = {
     title: "You’re all set!",
-    subtitle: "Your phone is verified. Your first 3 Writing checks are on us.",
+    subtitle: "Your email is verified. Your first 3 Writing checks are on us.",
     imageSrc: "/images/auth/img_mascot_celebrating.png",
     imageAlt: "BandUp mascot celebrating",
     notice: {

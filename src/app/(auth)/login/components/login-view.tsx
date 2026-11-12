@@ -9,7 +9,7 @@ import type { LoginMethod, LoginViewProps } from "../types";
 import { LoginMethodTabs } from "./login-method-tabs";
 import { PasswordLoginForm } from "./password-login-form";
 import { SessionNotice } from "./session-notice";
-import { SmsLoginForm } from "./sms-login-form";
+import { EmailLoginForm } from "./email-login-form";
 
 function FormPlaceholder() {
     return <div aria-hidden className="min-h-[360px]" />;
@@ -39,7 +39,7 @@ export function LoginView({ next, reason, method: initialMethod }: LoginViewProp
                 value={method}
                 onValueChange={handleMethodChange}
                 password={ready ? <PasswordLoginForm next={next} /> : <FormPlaceholder />}
-                sms={ready ? <SmsLoginForm next={next} /> : <FormPlaceholder />}
+                email={ready ? <EmailLoginForm next={next} /> : <FormPlaceholder />}
             />
 
             <p className="flex items-center justify-center gap-1.5 text-[14px] leading-[21px]">

@@ -13,15 +13,15 @@ export const loginApi: LoginApi = {
         return data;
     },
     async sendCode(payload) {
-        const { data } = await api.post<SendCodeResponse>("/auth/login/sms/send", payload);
+        const { data } = await api.post<SendCodeResponse>("/auth/login/email/send", payload);
         return data;
     },
     async verifyCode(payload) {
-        const { data } = await api.post<VerifyCodeResponse>("/auth/login/sms/verify", payload);
+        const { data } = await api.post<VerifyCodeResponse>("/auth/login/email/verify", payload);
         return data;
     },
     async resendCode(payload) {
-        const { data } = await api.post<ResendCodeResponse>("/auth/login/sms/resend", payload);
+        const { data } = await api.post<ResendCodeResponse>("/auth/login/email/resend", payload);
         return data;
     },
 };

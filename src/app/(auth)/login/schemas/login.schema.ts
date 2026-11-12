@@ -1,12 +1,12 @@
 import { z } from "zod";
-import { normalizePhone } from "@/lib/phone";
+import { normalizeEmail } from "@/lib/email";
 import { LOGIN_COPY } from "../constants/login";
 
 const { errors } = LOGIN_COPY;
 
-const phone = z
-    .string()
-    .refine((value) => normalizePhone(value) !== null, { message: errors.phone });
+const email = z.string().refine((value) => normalizeEmail(value) !== null, {
+    message: errors.email,
+});
 
 const captchaToken = z
     .string()
@@ -14,12 +14,12 @@ const captchaToken = z
     .refine((value) => Boolean(value), { message: errors.captcha });
 
 export const passwordLoginSchema = z.object({
-    phone,
+    email,
     password: z.string().min(1, { message: errors.password }),
     captchaToken,
 });
 
-export const smsLoginSchema = z.object({ phone, captchaToken });
+export const emailLoginSchema = z.object({ email, captchaToken });
 
 export type PasswordLoginValues = z.infer<typeof passwordLoginSchema>;
-export type SmsLoginValues = z.infer<typeof smsLoginSchema>;
+export type EmailLoginValues = z.infer<typeof emailLoginSchema>;

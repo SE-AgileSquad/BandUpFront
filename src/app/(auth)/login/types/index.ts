@@ -1,6 +1,6 @@
 import type { AuthUser, OtpErrorCode } from "@/types/auth";
 
-export type LoginMethod = "password" | "sms";
+export type LoginMethod = "password" | "email";
 export type LoginReason = "session-expired";
 
 export type LoginViewProps = {
@@ -9,21 +9,17 @@ export type LoginViewProps = {
     method: LoginMethod;
 };
 
-export type LoginPayload = {
-    phone: string;
-    password: string;
-    captchaToken: string;
-};
-export type LoginResponse = { user: AuthUser };
-
-export type SendCodePayload = { phone: string; captchaToken: string };
+export type LoginPayload = { email: string; password: string; captchaToken: string };
+export type SendCodePayload = { email: string; captchaToken: string };
 export type SendCodeResponse = {
-    verificationId: string;
-    maskedPhone: string;
-    codeLength: 5;
-    expiresAt: string;
-    resendAvailableAt: string;
+  verificationId: string;
+  maskedEmail: string;
+  codeLength: 5;
+  expiresAt: string;
+  resendAvailableAt: string;
 };
+
+export type LoginResponse = { user: AuthUser };
 
 export type VerifyCodePayload = { verificationId: string; code: string };
 export type VerifyCodeResponse = { user: AuthUser };

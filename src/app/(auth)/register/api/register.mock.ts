@@ -1,9 +1,9 @@
-import { maskPhone } from "@/lib/phone";
+import { maskEmail } from "@/lib/email";
 import { mockSession } from "@/lib/mock-session";
 import { ApiError } from "@/types/api";
 import {
     MOCK_EXPIRED_CODE,
-    MOCK_TAKEN_PHONE,
+    MOCK_TAKEN_EMAIL,
     MOCK_VALID_CODE,
     REGISTER_LIMITS,
 } from "../constants/register";
@@ -11,7 +11,7 @@ import type { RegisterApi, RegisterErrorCode } from "../types";
 
 type MockVerification = {
     fullName: string;
-    phone: string;
+    email: string;
     wrongAttempts: number;
     lockedUntil: number | null;
 };
@@ -32,7 +32,7 @@ function fail(
 function getVerification(id: string) {
     let entry = verifications.get(id);
     if (!entry) {
-        entry = { fullName: "BandUp Student", phone: "", wrongAttempts: 0, lockedUntil: null };
+        entry = { fullName: "BandUp Student", email: "", wrongAttempts: 0, lockedUntil: null };
         verifications.set(id, entry);
     }
     return entry;
@@ -41,12 +41,12 @@ function getVerification(id: string) {
 export const registerApi: RegisterApi = {
     async register(payload) {
         await delay();
-        if (payload.phone === MOCK_TAKEN_PHONE) fail(409, "PHONE_ALREADY_REGISTERED");
+        if (payload.email === MOCK_TAKEN_EMAIL) fail(409, "EMAIL_ALREADY_REGISTERED");
 
         const verificationId = `mock-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
         verifications.set(verificationId, {
             fullName: payload.fullName,
-            phone: payload.phone,
+            email: payload.email,
             wrongAttempts: 0,
             lockedUntil: null,
         });
@@ -54,7 +54,7 @@ export const registerApi: RegisterApi = {
         const now = Date.now();
         return {
             verificationId,
-            maskedPhone: maskPhone(payload.phone),
+            maskedEmail: maskEmail(payload.email),
             codeLength: 5,
             expiresAt: iso(now + REGISTER_LIMITS.codeTtlMs),
             resendAvailableAt: iso(now + REGISTER_LIMITS.resendCooldownMs),
@@ -73,7 +73,7 @@ export const registerApi: RegisterApi = {
             const user = {
                 id: `mock-user-${verificationId}`,
                 fullName: entry.fullName,
-                phone: entry.phone,
+                email: entry.email,
             };
             mockSession.set(user);
             return { user };

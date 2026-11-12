@@ -1,19 +1,19 @@
 import type { AuthUser, OtpChallenge, OtpErrorCode } from "@/types/auth";
 
 export type RegisterPayload = {
-    fullName: string;
-    phone: string;
-    password: string;
-    captchaToken: string;
-    acceptedTerms: boolean;
+  fullName: string;
+  email: string;
+  password: string;
+  captchaToken: string;
+  acceptedTerms: boolean;
 };
 
 export type RegisterResponse = {
-    verificationId: string;
-    maskedPhone: string;
-    codeLength: 5;
-    expiresAt: string;
-    resendAvailableAt: string;
+  verificationId: string;
+  maskedEmail: string;
+  codeLength: 5;
+  expiresAt: string;
+  resendAvailableAt: string;
 };
 
 export type VerifyPayload = { verificationId: string; code: string };
@@ -31,9 +31,9 @@ export type RegisterApi = {
 };
 
 
-export type RegisterErrorCode = "PHONE_ALREADY_REGISTERED" | OtpErrorCode;
+export type RegisterErrorCode = "EMAIL_ALREADY_REGISTERED" | OtpErrorCode;
 
 export type VerificationSession = OtpChallenge & {
-  phone: string;
+  email: string;
   fullName: string;
 };

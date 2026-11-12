@@ -8,14 +8,14 @@ import type { LoginMethod } from "../types";
 
 type LoginFlowData = {
     method: LoginMethod;
-    phone: string;
+    email: string;
     challenge: OtpChallenge | null;
 };
 
 type LoginFlowState = LoginFlowData & {
     setMethod: (method: LoginMethod) => void;
-    setPhone: (phone: string) => void;
-    startChallenge: (phone: string, challenge: OtpChallenge) => void;
+    setEmail: (email: string) => void;
+    startChallenge: (email: string, challenge: OtpChallenge) => void;
     updateTimers: (
         timers: Partial<Pick<OtpChallenge, "expiresAt" | "resendAvailableAt">>,
     ) => void;
@@ -25,7 +25,7 @@ type LoginFlowState = LoginFlowData & {
 
 const initialState: LoginFlowData = {
     method: "password",
-    phone: "",
+    email: "",
     challenge: null,
 };
 
@@ -34,9 +34,9 @@ export const useLoginFlow = create<LoginFlowState>()(
         (set) => ({
             ...initialState,
             setMethod: (method) => set({ method }),
-            setPhone: (phone) => set({ phone }),
-            startChallenge: (phone, challenge) =>
-                set({ method: "sms", phone, challenge }),
+            setEmail: (email) => set({ email }),
+            startChallenge: (email, challenge) =>
+                set({ method: "email", email, challenge }),
             updateTimers: (timers) =>
                 set((state) =>
                     state.challenge ? { challenge: { ...state.challenge, ...timers } } : {},
@@ -48,12 +48,12 @@ export const useLoginFlow = create<LoginFlowState>()(
             reset: () => set(initialState),
         }),
         {
-            name: "bandup-login-flow",
+            name: "bandup-login-flow-v2",
             storage: createJSONStorage(() => sessionStorage),
             skipHydration: true,
             partialize: (state) => ({
                 method: state.method,
-                phone: state.phone,
+                email: state.email,
                 challenge: state.challenge,
             }),
         },

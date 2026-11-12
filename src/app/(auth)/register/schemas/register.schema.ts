@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { normalizePhone } from "@/lib/phone";
 import { REGISTER_COPY, REGISTER_LIMITS } from "../constants/register";
+    import { normalizeEmail } from "@/lib/email";
 
 const { errors } = REGISTER_COPY;
 
@@ -11,10 +11,10 @@ export const registerSchema = z.object({
         .refine((value) => value.split(/\s+/).filter(Boolean).length >= 2, {
             message: errors.fullName,
         }),
-    phone: z
+    email: z
         .string()
-        .refine((value) => normalizePhone(value) !== null, {
-            message: errors.phone,
+        .refine((value) => normalizeEmail(value) !== null, {
+            message: errors.email,
         }),
     password: z
         .string()
