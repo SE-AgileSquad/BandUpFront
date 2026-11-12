@@ -17,7 +17,7 @@ const options = [
   { value: "system", label: "System", icon: Monitor },
 ] as const;
 
-export function ThemeToggle() {
+export function ThemeToggle({ className }: { className?: string }) {
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -31,6 +31,7 @@ export function ThemeToggle() {
         variant="brand-outline"
         size="icon-lg"
         aria-label="Toggle theme"
+        className={className}
         disabled
       >
         <Sun className="size-5" />
@@ -43,7 +44,12 @@ export function ThemeToggle() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="brand-outline" size="icon-lg" aria-label="Toggle theme">
+        <Button
+          variant="brand-outline"
+          size="icon-lg"
+          aria-label="Toggle theme"
+          className={className}
+        >
           <Icon className="size-5" />
         </Button>
       </DropdownMenuTrigger>

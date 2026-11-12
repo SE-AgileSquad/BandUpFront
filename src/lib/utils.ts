@@ -20,10 +20,14 @@ const twMerge = extendTailwindMerge({
             "caption",
             "eyebrow",
             "logo",
+            "auth-title",
+            "auth-heading",
           ],
         },
       ],
-      rounded: [{ rounded: ["logo", "btn", "frame", "card", "banner", "pill"] }],
+      rounded: [
+        { rounded: ["logo", "btn", "frame", "card", "banner", "pill", "field"] },
+      ],
     },
   },
 });

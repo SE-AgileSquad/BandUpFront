@@ -1,33 +1,15 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
-
-const TOKEN_KEY = "access_token";
-
-type AuthState = "loading" | "authenticated" | "guest";
-
-function subscribe(callback: () => void) {
-  window.addEventListener("storage", callback);
-  return () => window.removeEventListener("storage", callback);
-}
-
-function getSnapshot(): AuthState {
-  try {
-    return window.localStorage.getItem(TOKEN_KEY) ? "authenticated" : "guest";
-  } catch {
-    return "guest";
-  }
-}
-
-function getServerSnapshot(): AuthState {
-  return "loading";
-}
+import { useQuery } from "@tanstack/react-query";
+import { authKeys, fetchMe } from "@/lib/auth-api";
 
 export function useAuth(): { isAuthenticated: boolean; isLoading: boolean } {
-  const state = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const { data, isPending } = useQuery({
+    queryKey: authKeys.me,
+    queryFn: fetchMe,
+    retry: false,
+    staleTime: 60 * 1000,
+  });
 
-  return {
-    isAuthenticated: state === "authenticated",
-    isLoading: state === "loading",
-  };
+  return { isAuthenticated: Boolean(data), isLoading: isPending };
 }

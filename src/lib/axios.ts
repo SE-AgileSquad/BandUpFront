@@ -5,11 +5,7 @@ import { ApiError } from "@/types/api";
 export const api = axios.create({
   baseURL: env.apiUrl,
   headers: { "Content-Type": "application/json" },
-});
-
-api.interceptors.request.use((config) => {
-  // TODO: attach auth token here
-  return config;
+  withCredentials: true,
 });
 
 api.interceptors.response.use(

@@ -23,8 +23,13 @@
   --input: #e3def8;
   --ring: #6c47ff;
 
-  --destructive: #dc2626;
-  --success: #16a34a;
+  --destructive: #ef4444;
+  --success: #15803d;
+  --field: #f3f0ff;
+  --field-border: #ddd6f7;
+  --destructive-bg: #fef2f2;
+  --success-bg: #f0fdf4;
+  --primary-disabled: #b5a9dc;
   --warning: #d97706;
   --info: #2563eb;
 
@@ -57,6 +62,11 @@
 
   --destructive: #f87171;
   --success: #4ade80;
+  --field: #221c40;
+  --field-border: #332c5a;
+  --destructive-bg: #2a1215;
+  --success-bg: #052e16;
+  --primary-disabled: #51456e;
   --warning: #fbbf24;
   --info: #60a5fa;
 
@@ -109,6 +119,13 @@
   --radius-card: 24px;
   --radius-banner: 40px;
   --radius-pill: 9999px;
+
+  --color-field: var(--field);
+  --color-field-border: var(--field-border);
+  --color-destructive-bg: var(--destructive-bg);
+  --color-success-bg: var(--success-bg);
+  --color-primary-disabled: var(--primary-disabled);
+  --radius-field: 14px;
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
@@ -308,4 +325,16 @@
       transform: translateY(0);
     }
   }
+}
+
+@utility text-auth-title {
+  font-size: 30px;
+  line-height: normal;
+  font-weight: 700;
+}
+
+@utility text-auth-heading {
+  font-size: 40px;
+  line-height: 48px;
+  font-weight: 700;
 }
