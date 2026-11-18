@@ -49,7 +49,7 @@ export const useRegisterFlow = create<RegisterFlowState>()(
 
 export function useRegisterFlowReady() {
     const [ready, setReady] = useState(() =>
-        useRegisterFlow.persist.hasHydrated(),
+        typeof window === "undefined" ? false : useRegisterFlow.persist.hasHydrated(),
     );
 
     useEffect(() => {
