@@ -7,7 +7,8 @@ import { OtpVerification } from "@/components/auth/otp-verification";
 import { useAutoContinue } from "@/hooks/use-auto-continue";
 import { useOtpChallenge } from "@/hooks/use-otp-challenge";
 import { ROUTES } from "@/constants/routes";
-import { refreshAuth } from "@/lib/auth-api";
+import { authKeys } from "@/lib/auth-api";
+import type { AuthUser } from "@/types/auth";
 import { withParams } from "@/lib/safe-redirect";
 import type { OtpChallenge } from "@/types/auth";
 import {
@@ -48,10 +49,14 @@ function VerifyContent({ challenge, next, onLeave }: VerifyContentProps) {
         messages: MESSAGES,
         onLocked: setLockedUntil,
         onTimers: updateTimers,
+        onSuccess: (result) =>
+            queryClient.setQueryData(
+                authKeys.me,
+                (result as { user: AuthUser }).user,
+            ),
     });
 
     useAutoContinue(otp.state.kind === "success", async () => {
-        await refreshAuth(queryClient);
         onLeave();
         useLoginFlow.getState().reset();
         router.replace(next ?? ROUTES.DASHBOARD);

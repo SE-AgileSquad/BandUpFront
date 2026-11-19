@@ -2,8 +2,13 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { authKeys, fetchMe } from "@/lib/auth-api";
+import type { AuthUser } from "@/types/auth";
 
-export function useAuth(): { isAuthenticated: boolean; isLoading: boolean } {
+export function useAuth(): {
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  user: AuthUser | null;
+} {
   const { data, isPending } = useQuery({
     queryKey: authKeys.me,
     queryFn: fetchMe,
@@ -11,5 +16,9 @@ export function useAuth(): { isAuthenticated: boolean; isLoading: boolean } {
     staleTime: 60 * 1000,
   });
 
-  return { isAuthenticated: Boolean(data), isLoading: isPending };
+  return {
+    isAuthenticated: Boolean(data),
+    isLoading: isPending,
+    user: data ?? null,
+  };
 }

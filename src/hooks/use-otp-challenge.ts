@@ -17,7 +17,7 @@ type UseOtpChallengeOptions = {
     messages: { verify: Notice; resend: Notice };
     onLocked?: (lockedUntil: number | null) => void;
     onTimers?: (timers: Partial<Timers>) => void;
-    onSuccess?: () => void;
+    onSuccess?: (result: unknown) => void;
 };
 
 function initialState(challenge: OtpChallenge): OtpState {
@@ -50,9 +50,9 @@ export function useOtpChallenge({
         setNotice(null);
         setIsVerifying(true);
         try {
-            await verifyFn(code);
+            const result = await verifyFn(code);
             setState({ kind: "success" });
-            onSuccess?.();
+            onSuccess?.(result);
         } catch (error) {
             if (error instanceof ApiError) {
                 const details = (error.details ?? {}) as {

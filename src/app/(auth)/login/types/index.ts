@@ -19,7 +19,7 @@ export type SendCodeResponse = {
   resendAvailableAt: string;
 };
 
-export type LoginResponse = { user: AuthUser };
+export type LoginResponse = AuthUser;
 
 export type VerifyCodePayload = { verificationId: string; code: string };
 export type VerifyCodeResponse = { user: AuthUser };
