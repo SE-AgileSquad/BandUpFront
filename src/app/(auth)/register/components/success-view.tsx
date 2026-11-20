@@ -9,7 +9,7 @@ import { StatusNotice } from "@/components/auth/status-notice";
 import { ImageSlot } from "@/components/shared/image-slot";
 import { useAutoContinue } from "@/hooks/use-auto-continue";
 import { ROUTES } from "@/constants/routes";
-import { refreshAuth } from "@/lib/auth-api";
+import { authKeys } from "@/lib/auth-api";
 import { SUCCESS_COPY } from "../constants/register";
 import { useRegisterFlow, useRegisterFlowReady } from "../hooks/use-register-flow";
 
@@ -34,16 +34,17 @@ export function SuccessView() {
         if (!ready || handled.current) return;
         handled.current = true;
 
-        if (!useRegisterFlow.getState().verified) {
+        const flow = useRegisterFlow.getState();
+        if (!flow.verified || !flow.session) {
             router.replace(ROUTES.REGISTER);
             return;
         }
+        queryClient.setQueryData(authKeys.me, flow.session.user);
         setAllowed(true);
-        useRegisterFlow.getState().reset();
+        flow.reset();
     }, [ready, router]);
 
     useAutoContinue(allowed, async () => {
-        await refreshAuth(queryClient);
         router.replace(ROUTES.DASHBOARD);
     });
 

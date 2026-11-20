@@ -119,6 +119,8 @@
   --radius-card: 24px;
   --radius-banner: 40px;
   --radius-pill: 9999px;
+  --radius-nav: 12px;
+  --radius-dock: 26px;
 
   --color-field: var(--field);
   --color-field-border: var(--field-border);
@@ -337,4 +339,14 @@
   font-size: 40px;
   line-height: 48px;
   font-weight: 700;
+}
+
+@utility text-page-title {
+  font-size: 26px;
+  line-height: 32px;
+  font-weight: 700;
+  @media (min-width: 1024px) {
+    font-size: 32px;
+    line-height: 38px;
+  }
 }

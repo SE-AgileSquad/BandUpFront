@@ -31,7 +31,13 @@ function fail(
 }
 
 function mockUser(email: string): AuthUser {
-    return { id: `mock-user-${email}`, fullName: "BandUp Student", email };
+    return {
+        id: `mock-user-${email}`,
+        displayName: "BandUp Student",
+        email,
+        role: "student",
+        creditBalance: 3,
+    };
 }
 
 function getChallenge(id: string) {
@@ -51,7 +57,7 @@ export const loginApi: LoginApi = {
         }
         const user = mockUser(email);
         mockSession.set(user);
-        return { user };
+        return user;
     },
 
     async sendCode({ email }) {

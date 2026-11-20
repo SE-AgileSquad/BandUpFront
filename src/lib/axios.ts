@@ -10,10 +10,14 @@ export const api = axios.create({
 
 api.interceptors.response.use(
   (response) => response,
-  (error: AxiosError<{ message?: string; code?: string }>) => {
+  (error: AxiosError<{ message?: string; code?: string; detail?: string; title?: string }>) => {
     const status = error.response?.status ?? 0;
     const message =
-      error.response?.data?.message ?? error.message ?? "Something went wrong";
+      error.response?.data?.detail ??
+      error.response?.data?.message ??
+      error.response?.data?.title ??
+      error.message ??
+      "Something went wrong";
 
     return Promise.reject(
       new ApiError(message, status, error.response?.data?.code, error.response?.data),

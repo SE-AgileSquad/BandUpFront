@@ -76,6 +76,7 @@ export function EmailLoginForm({ next }: { next: string | null }) {
             });
             router.push(withParams(ROUTES.LOGIN_VERIFY, { next }));
         } catch (error) {
+            setValue("captchaToken", null);
             if (
                 error instanceof ApiError &&
                 error.status === 422 &&

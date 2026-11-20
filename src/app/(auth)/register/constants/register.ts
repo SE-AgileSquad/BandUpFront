@@ -21,7 +21,7 @@ export const REGISTER_COPY = {
     title: "Create your account",
     subtitle: "Start with 3 free Writing checks and your first Reading passage.",
     fields: {
-        fullName: { label: "Full name", placeholder: "Your name" },
+        displayName: { label: "Display name", placeholder: "Your name" },
         email: { label: "Email", placeholder: "you@example.com" },
         password: {
             label: "Password",
@@ -30,7 +30,7 @@ export const REGISTER_COPY = {
         },
     },
     errors: {
-        fullName: "Enter your first and last name.",
+        displayName: "Enter your display name.",
         email: "Enter a valid email.",
         passwordLength: "Use at least 8 characters.",
         passwordMix: "Include both letters and numbers.",
