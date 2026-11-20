@@ -85,8 +85,11 @@ export const DASHBOARD_COPY = {
 } as const;
 
 export function isRouteActive(pathname: string, href: string) {
-    if (href === DASHBOARD_ROUTES.HOME) return pathname === href;
-    return pathname === href || pathname.startsWith(`${href}/`);
+    const normalizedPath = pathname.replace(/\/+$/, "") || "/";
+    const normalizedHref = href.replace(/\/+$/, "") || "/";
+
+    if (normalizedHref === DASHBOARD_ROUTES.HOME) return normalizedPath === normalizedHref;
+    return normalizedPath === normalizedHref || normalizedPath.startsWith(`${normalizedHref}/`);
 }
 
 export function isPracticeActive(pathname: string) {
