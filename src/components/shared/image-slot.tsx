@@ -5,11 +5,12 @@ export type ImageSlotProps = {
     src?: string | { light: string; dark: string };
     alt: string;
     priority?: boolean;
+    loading?: "eager" | "lazy";
     sizes?: string;
     className?: string;
 };
 
-export function ImageSlot({ src, alt, priority, sizes, className }: ImageSlotProps) {
+export function ImageSlot({ src, alt, priority, loading, sizes, className }: ImageSlotProps) {
     if (!src || (typeof src === "object" && (!src.light || !src.dark))) {
         return <div aria-hidden className={cn("absolute inset-0 bg-muted", className)} />;
     }
@@ -21,6 +22,7 @@ export function ImageSlot({ src, alt, priority, sizes, className }: ImageSlotPro
                 alt={alt}
                 fill
                 priority={priority}
+                loading={loading}
                 sizes={sizes}
                 className={cn("object-contain", className)}
             />
@@ -34,6 +36,7 @@ export function ImageSlot({ src, alt, priority, sizes, className }: ImageSlotPro
                 alt={alt}
                 fill
                 priority={priority}
+                loading={loading}
                 sizes={sizes}
                 className={cn("object-contain dark:hidden", className)}
             />
@@ -42,6 +45,7 @@ export function ImageSlot({ src, alt, priority, sizes, className }: ImageSlotPro
                 alt={alt}
                 fill
                 priority={priority}
+                loading={loading}
                 sizes={sizes}
                 className={cn("hidden object-contain dark:block", className)}
             />

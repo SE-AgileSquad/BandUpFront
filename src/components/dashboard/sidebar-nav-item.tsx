@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { isRouteActive, type NavItem } from "@/constants/dashboard-nav";
 import { cn } from "@/lib/utils";
 
-export function SidebarNavItem({ label, href }: NavItem) {
+export function SidebarNavItem({ label, href, icon: Icon }: NavItem) {
     const pathname = usePathname();
     const active = isRouteActive(pathname, href);
 
@@ -20,13 +20,7 @@ export function SidebarNavItem({ label, href }: NavItem) {
                     : "font-medium text-muted-foreground hover:bg-primary-soft/60",
             )}
         >
-            <span
-                aria-hidden
-                className={cn(
-                    "size-2 shrink-0 rounded-full",
-                    active ? "bg-primary" : "bg-muted-foreground/40",
-                )}
-            />
+            <Icon aria-hidden className="size-[18px] shrink-0" strokeWidth={1.8} />
             {label}
         </Link>
     );

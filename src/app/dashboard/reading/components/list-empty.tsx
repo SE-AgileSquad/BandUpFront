@@ -3,27 +3,35 @@ import { ImageSlot } from "@/components/shared/image-slot";
 import { LIST_COPY } from "../constants/list";
 
 type ListEmptyProps =
-    | { variant: "empty"; showClear: boolean; onClear: () => void }
+    | { variant: "empty"; emptyType: "passages" | "ongoing"; showClear: boolean; onClear: () => void }
     | { variant: "error"; onRetry: () => void };
 
 export function ListEmpty(props: ListEmptyProps) {
     const isError = props.variant === "error";
+    const emptyType = props.variant === "empty" ? props.emptyType : null;
+    const image = isError
+        ? "/images/img_offline.png"
+        : emptyType === "ongoing"
+            ? "/images/reading/img_no_ongoing_test.png"
+            : "/images/reading/img_no_passages.png";
 
     return (
-        <div className="flex flex-col items-center gap-3 rounded-card border border-border bg-card px-6 py-12 text-center">
-            {!isError && (
-                <div className="relative size-40">
-                    <ImageSlot
-                        src={undefined}
-                        alt={LIST_COPY.empty.imageAlt}
-                        sizes="160px"
-                        className="rounded-frame"
-                    />
-                </div>
-            )}
-            <p className="text-[24px] leading-[32px] font-bold">
-                {isError ? LIST_COPY.error.title : LIST_COPY.empty.title}
-            </p>
+        <div className="flex flex-col items-center gap-4 py-8 text-center">
+            <div className="relative size-72 sm:size-80">
+                <ImageSlot
+                    src={image}
+                    alt={
+                        isError
+                            ? "You appear to be offline"
+                            : emptyType === "ongoing"
+                                ? "No ongoing reading tests"
+                                : "No reading passages"
+                    }
+                    loading="eager"
+                    sizes="(min-width: 640px) 320px, 288px"
+                />
+            </div>
+            {isError && <p className="text-[24px] leading-[32px] font-bold">{LIST_COPY.error.title}</p>}
             <p className="max-w-md text-[14px] leading-[21px] text-muted-foreground">
                 {isError ? LIST_COPY.error.text : LIST_COPY.empty.text}
             </p>

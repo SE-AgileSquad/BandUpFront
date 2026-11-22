@@ -42,7 +42,7 @@ export function PassageCard({ item, onSelect }: PassageCardProps) {
             type="button"
             disabled={disabled}
             onClick={() => onSelect(item)}
-            className="flex w-full flex-col gap-[10px] rounded-card border border-border bg-card p-[18px] text-left outline-none transition-colors hover:bg-primary-soft/40 focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-70"
+            className="flex w-full flex-col gap-[10px] rounded-card border border-border bg-card p-3 text-left outline-none transition-colors hover:bg-primary-soft/40 focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-70"
         >
             <PassageImage src={passage.imageUrl} />
             <span className="text-[18px] leading-[26px] font-bold text-foreground">

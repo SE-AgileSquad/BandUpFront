@@ -1,8 +1,8 @@
 "use client";
 
 import { ReadingDialog } from "@/app/dashboard/reading/_shared/components/reading-dialog";
-import { ImageSlot } from "@/components/shared/image-slot";
 import { Button } from "@/components/ui/button";
+import { Hourglass } from "react-loader-spinner";
 import { LIST_COPY } from "../constants/list";
 
 type StartDialogProps = { open: boolean; onConfirm: () => void; onClose: () => void };
@@ -27,8 +27,14 @@ export function StartDialog({ open, onConfirm, onClose }: StartDialogProps) {
                 </>
             }
         >
-            <div className="relative mx-auto size-[120px]">
-                <ImageSlot src={undefined} alt={copy.imageAlt} sizes="120px" className="rounded-frame" />
+            <div className="mx-auto flex size-[120px] items-center justify-center" aria-hidden="true">
+                <Hourglass
+                    visible={open}
+                    height="88"
+                    width="88"
+                    ariaLabel="hourglass-loading"
+                    colors={["#8b5cf6", "#c4b5fd"]}
+                />
             </div>
             <p className="text-[13.5px] leading-[1.6] text-foreground">{copy.hint}</p>
         </ReadingDialog>

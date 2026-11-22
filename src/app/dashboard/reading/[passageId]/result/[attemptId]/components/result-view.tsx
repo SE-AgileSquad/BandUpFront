@@ -32,12 +32,12 @@ export function ResultView({ passageId, attemptId }: ResultViewProps) {
     const result = query.data;
 
     return (
-        <div className="flex flex-col gap-5 lg:flex-row">
+        <div className="grid min-w-0 grid-cols-1 items-center gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.95fr)] lg:gap-8">
             <ScoreCard result={result} />
-            <div className="flex flex-col gap-3 lg:w-[380px] lg:shrink-0">
+            <aside className="flex min-w-0 flex-col gap-5 rounded-card border border-border bg-card p-5 shadow-sm sm:p-7">
                 <BreakdownCard items={result.breakdown} />
                 <ResultActions result={result} passageId={passageId} attemptId={attemptId} />
-            </div>
+            </aside>
         </div>
     );
 }

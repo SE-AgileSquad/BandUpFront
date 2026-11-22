@@ -12,6 +12,12 @@ const STORAGE_KEY = "bandup:mock:reading:v1";
 const DURATION_MS = 20 * 60_000;
 const GRACE_MS = 60_000;
 const DELAY_MS = 500;
+const PASSAGE_IMAGES: Record<string, string> = {
+    "cooling-cities": "/images/Reading/img_cooling_cities.jpg",
+    "history-of-tea": "/images/Reading/img_history_of_tea.jpg",
+    "history-of-timekeeping": "/images/Reading/img_timekeeping.jpg",
+    "urban-beekeeping": "/images/Reading/img_urban_beekeeping.jpg",
+};
 
 type MockAttempt = {
     id: string;
@@ -132,7 +138,7 @@ export const readingMockApi: ReadingApi = {
             return {
                 id: passage.id,
                 title: passage.title,
-                imageUrl: null,
+                imageUrl: PASSAGE_IMAGES[passage.id] ?? null,
                 questionCount: 10,
                 durationMinutes: 20,
                 status: active ? "in_progress" : done ? "completed" : "new",

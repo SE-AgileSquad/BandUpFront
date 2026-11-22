@@ -5,17 +5,17 @@ export function BreakdownCard({ items }: { items: BreakdownItem[] }) {
     return (
         <section
             aria-labelledby="breakdown-title"
-            className="flex flex-col gap-3 rounded-card border border-border bg-card p-5"
+            className="flex flex-col gap-4"
         >
-            <h2 id="breakdown-title" className="text-[16px] leading-[24px] font-bold">
+            <h2 id="breakdown-title" className="text-[20px] leading-7 font-bold sm:text-[22px]">
                 {RESULT_COPY.breakdownTitle}
             </h2>
-            <ul className="flex flex-col gap-3">
+            <ul className="flex flex-col gap-4">
                 {items.map((item) => (
-                    <li key={item.label} className="flex flex-col gap-1.5">
+                    <li key={item.label} className="flex flex-col gap-2">
                         <div className="flex items-center justify-between gap-2">
-                            <span className="text-[13px] leading-[1.4] font-medium">{item.label}</span>
-                            <span className="text-[13px] leading-[1.4] font-bold">
+                            <span className="text-[14px] leading-5 font-medium sm:text-[15px]">{item.label}</span>
+                            <span className="text-[14px] leading-5 font-bold sm:text-[15px]">
                                 {item.correct} / {item.total}
                             </span>
                         </div>
@@ -25,7 +25,7 @@ export function BreakdownCard({ items }: { items: BreakdownItem[] }) {
                             aria-valuemin={0}
                             aria-valuemax={item.total}
                             aria-valuenow={item.correct}
-                            className="h-2 overflow-hidden rounded-pill bg-primary-soft"
+                            className="h-2.5 overflow-hidden rounded-pill bg-primary-soft"
                         >
                             <div
                                 className="h-full rounded-pill bg-primary"

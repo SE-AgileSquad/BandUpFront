@@ -42,6 +42,7 @@ export function PracticeSheet({ open, onOpenChange }: PracticeSheetProps) {
                     <ul className="flex flex-col gap-1">
                         {PRACTICE_ITEMS.map((item) => {
                             const active = isRouteActive(pathname, item.href);
+                            const Icon = item.icon;
                             return (
                                 <li key={item.href}>
                                     <Link
@@ -49,12 +50,13 @@ export function PracticeSheet({ open, onOpenChange }: PracticeSheetProps) {
                                         onClick={() => onOpenChange(false)}
                                         aria-current={active ? "page" : undefined}
                                         className={cn(
-                                            "flex w-full items-center rounded-nav px-3.5 py-3 text-[15px] leading-[22px] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring",
+                                            "flex w-full items-center gap-3 rounded-nav px-3.5 py-3 text-[15px] leading-[22px] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring",
                                             active
                                                 ? "bg-primary-soft font-semibold text-primary"
                                                 : "font-medium text-foreground hover:bg-primary-soft/60",
                                         )}
                                     >
+                                        <Icon aria-hidden className="size-[18px] shrink-0" strokeWidth={1.8} />
                                         {item.label}
                                     </Link>
                                 </li>

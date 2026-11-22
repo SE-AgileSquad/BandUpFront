@@ -314,6 +314,17 @@
 
 @theme {
   --animate-bandup-bounce: bandup-bounce 10s ease-in-out infinite;
+  --animate-result-star: result-star 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
+  @keyframes result-star {
+    from {
+      transform: scale(0.5);
+    }
+
+    to {
+      transform: scale(1);
+    }
+  }
 
   @keyframes bandup-bounce {
 

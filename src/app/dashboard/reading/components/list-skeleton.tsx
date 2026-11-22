@@ -10,9 +10,9 @@ export function ListSkeleton() {
                 <div
                     key={index}
                     aria-hidden
-                    className="flex flex-col gap-[10px] rounded-card border border-border bg-card p-[18px]"
+                    className="flex flex-col gap-[10px] rounded-card border border-border bg-card p-3"
                 >
-                    <div className="h-[110px] animate-pulse rounded-frame bg-muted" />
+                    <div className="h-[180px] animate-pulse rounded-t-frame bg-muted" />
                     <div className="h-5 w-2/3 animate-pulse rounded-pill bg-muted" />
                     <div className="h-4 w-1/2 animate-pulse rounded-pill bg-muted" />
                     <div className="mt-1 h-6 w-full animate-pulse rounded-pill bg-muted" />

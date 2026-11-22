@@ -83,6 +83,7 @@ export function ReadingListView() {
             ) : visible.length === 0 ? (
                 <ListEmpty
                     variant="empty"
+                    emptyType={filter === "in_progress" ? "ongoing" : "passages"}
                     showClear={filter !== "all"}
                     onClear={() => setFilter("all")}
                 />

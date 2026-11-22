@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { PageTitle } from "@/components/dashboard/page-title";
 import { ResultView } from "./components/result-view";
 import { RESULT_COPY } from "./constants/result";
 
@@ -16,7 +15,14 @@ export default async function ReadingResultPage({
 
     return (
         <>
-            <PageTitle title={RESULT_COPY.title} />
+            <header className="text-center">
+                <h1 className="text-[clamp(2rem,4vw,3rem)] leading-tight font-bold tracking-tight text-foreground">
+                    {RESULT_COPY.title}
+                </h1>
+                <p className="mt-2 text-[16px] leading-6 text-muted-foreground">
+                    {RESULT_COPY.subtitle}
+                </p>
+            </header>
             <ResultView passageId={passageId} attemptId={attemptId} />
         </>
     );

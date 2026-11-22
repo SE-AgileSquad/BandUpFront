@@ -1,15 +1,21 @@
 import type { Metadata } from "next";
 import {
+    Bot,
+    BookOpenCheck,
     BookOpen,
     CircleX,
+    GraduationCap,
     History,
     House,
+    Languages,
+    Layers,
+    PenLine,
     Search,
     type LucideIcon,
 } from "lucide-react";
 import { DASHBOARD_ROUTES } from "./routes";
 
-export type NavItem = { label: string; href: string };
+export type NavItem = { label: string; href: string; icon: LucideIcon };
 
 export type MobileTab =
     | { kind: "link"; label: string; href: string; icon: LucideIcon }
@@ -32,24 +38,24 @@ const T = DASHBOARD_PAGE_TITLES;
 const R = DASHBOARD_ROUTES;
 
 export const SIDEBAR_ITEMS: NavItem[] = [
-    { label: T.home, href: R.HOME },
-    { label: T.lessons, href: R.LESSONS },
-    { label: T.reading, href: R.READING },
-    { label: T.mistakes, href: R.MISTAKES },
-    { label: T.paraphrase, href: R.PARAPHRASE },
-    { label: T.wordCards, href: R.WORD_CARDS },
-    { label: T.writing, href: R.WRITING },
-    { label: T.assistant, href: R.ASSISTANT },
-    { label: T.search, href: R.SEARCH },
+    { label: T.home, href: R.HOME, icon: House },
+    { label: T.lessons, href: R.LESSONS, icon: GraduationCap },
+    { label: T.reading, href: R.READING, icon: BookOpenCheck },
+    { label: T.mistakes, href: R.MISTAKES, icon: CircleX },
+    { label: T.paraphrase, href: R.PARAPHRASE, icon: Languages },
+    { label: T.wordCards, href: R.WORD_CARDS, icon: Layers },
+    { label: T.writing, href: R.WRITING, icon: PenLine },
+    { label: T.assistant, href: R.ASSISTANT, icon: Bot },
+    { label: T.search, href: R.SEARCH, icon: Search },
 ];
 
 export const PRACTICE_ITEMS: NavItem[] = [
-    { label: T.lessons, href: R.LESSONS },
-    { label: T.reading, href: R.READING },
-    { label: T.paraphrase, href: R.PARAPHRASE },
-    { label: T.wordCards, href: R.WORD_CARDS },
-    { label: T.writing, href: R.WRITING },
-    { label: T.assistant, href: R.ASSISTANT },
+    { label: T.lessons, href: R.LESSONS, icon: GraduationCap },
+    { label: T.reading, href: R.READING, icon: BookOpenCheck },
+    { label: T.paraphrase, href: R.PARAPHRASE, icon: Languages },
+    { label: T.wordCards, href: R.WORD_CARDS, icon: Layers },
+    { label: T.writing, href: R.WRITING, icon: PenLine },
+    { label: T.assistant, href: R.ASSISTANT, icon: Bot },
 ];
 
 export const MOBILE_TABS: MobileTab[] = [
