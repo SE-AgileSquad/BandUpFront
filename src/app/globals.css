@@ -22,6 +22,9 @@
   --border: #e3def8;
   --input: #e3def8;
   --ring: #6c47ff;
+  --passage: #fbf6e9;
+  --warning-soft: #fff3d6;
+  --warning-soft-foreground: #9a6200;
 
   --destructive: #ef4444;
   --success: #15803d;
@@ -59,6 +62,10 @@
   --border: #2e2850;
   --input: #2e2850;
   --ring: #8b6cff;
+
+  --passage: #262033;
+  --warning-soft: #3a2c0e;
+  --warning-soft-foreground: #ffc95a;
 
   --destructive: #f87171;
   --success: #4ade80;
@@ -121,6 +128,11 @@
   --radius-pill: 9999px;
   --radius-nav: 12px;
   --radius-dock: 26px;
+
+  --color-passage: var(--passage);
+  --color-warning-soft: var(--warning-soft);
+  --color-warning-soft-foreground: var(--warning-soft-foreground);
+  --radius-chip: 10px;
 
   --color-field: var(--field);
   --color-field-border: var(--field-border);
@@ -345,8 +357,19 @@
   font-size: 26px;
   line-height: 32px;
   font-weight: 700;
+
   @media (min-width: 1024px) {
     font-size: 32px;
     line-height: 38px;
+  }
+}
+
+@utility text-score {
+  font-size: 48px;
+  line-height: 56px;
+  font-weight: 700;
+  @media (min-width: 1024px) {
+    font-size: 64px;
+    line-height: 72px;
   }
 }

@@ -27,7 +27,7 @@ const twMerge = extendTailwindMerge({
       ],
       rounded: [
         {
-          rounded: ["logo", "btn", "frame", "card", "banner", "pill", "field", "nav", "dock"],
+          rounded: ["logo", "btn", "frame", "card", "banner", "pill", "field", "nav", "dock", "chip"],
         },
       ],
     },

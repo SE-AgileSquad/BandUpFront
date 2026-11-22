@@ -1,9 +1,16 @@
-import { DASHBOARD_COPY } from "@/constants/dashboard-nav";
+"use client";
+
+import { usePathname } from "next/navigation";
+import { DASHBOARD_COPY, isFocusRoute } from "@/constants/dashboard-nav";
 import { MobileBottomNav } from "./mobile-bottom-nav";
 import { MobileTopBar } from "./mobile-top-bar";
 import { Sidebar } from "./sidebar";
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
+    const pathname = usePathname();
+
+    if (isFocusRoute(pathname)) return <>{children}</>;
+
     return (
         <div className="min-h-screen bg-background lg:flex">
             <a

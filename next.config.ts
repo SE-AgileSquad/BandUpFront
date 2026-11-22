@@ -5,13 +5,7 @@ const nextConfig: NextConfig = {
 
   trailingSlash: true,
 
-  output: "export",
-
   allowedDevOrigins: [],
-
-  images: {
-    unoptimized: true,
-  },
 };
 
 export default nextConfig;

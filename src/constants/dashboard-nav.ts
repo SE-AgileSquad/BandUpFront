@@ -99,3 +99,11 @@ export function isPracticeActive(pathname: string) {
 export function pageMetadata(title: string): Metadata {
     return { title: { absolute: `${title} · BandUp` } };
 }
+
+export const FOCUS_ROUTE_PATTERNS: RegExp[] = [
+  /^\/dashboard\/reading\/[^/]+\/test$/,
+];
+
+export function isFocusRoute(pathname: string) {
+  return FOCUS_ROUTE_PATTERNS.some((pattern) => pattern.test(pathname));
+}
