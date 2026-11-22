@@ -11,6 +11,8 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+For the frontend folder map, development conventions, and `.env.local` setup, see [FRONTEND_README.md](FRONTEND_README.md).
+
 ## Authentication (current implementation)
 
 This section describes the frontend as it is currently implemented. The backend contract may change; update this document when it does.
