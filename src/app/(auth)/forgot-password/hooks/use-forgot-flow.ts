@@ -75,7 +75,10 @@ export const useForgotFlow = create<ForgotFlowState>()(
 );
 
 export function useForgotFlowReady() {
-    const [ready, setReady] = useState(() => useForgotFlow.persist.hasHydrated());
+    // Persist middleware has no storage API during server rendering because
+    // sessionStorage is only available in the browser. Start consistently on
+    // the server and hydrate from sessionStorage after mount.
+    const [ready, setReady] = useState(false);
 
     useEffect(() => {
         let active = true;

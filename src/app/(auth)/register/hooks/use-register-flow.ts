@@ -48,9 +48,7 @@ export const useRegisterFlow = create<RegisterFlowState>()(
 );
 
 export function useRegisterFlowReady() {
-    const [ready, setReady] = useState(() =>
-        useRegisterFlow.persist.hasHydrated(),
-    );
+    const [ready, setReady] = useState(false);
 
     useEffect(() => {
         let active = true;

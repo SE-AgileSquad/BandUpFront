@@ -61,7 +61,7 @@ export const useLoginFlow = create<LoginFlowState>()(
 );
 
 export function useLoginFlowReady() {
-    const [ready, setReady] = useState(() => useLoginFlow.persist.hasHydrated());
+    const [ready, setReady] = useState(false);
 
     useEffect(() => {
         let active = true;
