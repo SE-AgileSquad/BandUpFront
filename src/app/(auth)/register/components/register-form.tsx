@@ -109,6 +109,15 @@ export function RegisterForm() {
                     return;
                 }
 
+                if (error.status === 422 && error.code === "CAPTCHA_FAILED") {
+                    setError(
+                        "captchaToken",
+                        { type: "server", message: REGISTER_COPY.errors.captchaFailed },
+                        { shouldFocus: true },
+                    );
+                    return;
+                }
+
                 if (error.status === 422) {
                     const fieldErrors =
                         (error.details as { fieldErrors?: FieldErrors } | undefined)

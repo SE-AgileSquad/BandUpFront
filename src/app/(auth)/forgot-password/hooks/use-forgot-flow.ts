@@ -7,15 +7,21 @@ import type { OtpChallenge } from "@/types/auth";
 
 type ForgotFlowData = {
     email: string;
-    challenge: OtpChallenge | null;
+    challenge: ForgotChallenge | null;
     newPassword: string | null;
     passwordError: string | null;
     completed: boolean;
     completedMaskedEmail: string;
 };
 
+export type ForgotChallenge = Pick<
+    OtpChallenge,
+    "maskedEmail" | "expiresAt" | "resendAvailableAt" | "lockedUntil"
+>;
+
 type ForgotFlowState = ForgotFlowData & {
-    startChallenge: (email: string, challenge: OtpChallenge) => void;
+    setEmail: (email: string) => void;
+    startChallenge: (email: string, challenge: ForgotChallenge) => void;
     setNewPassword: (password: string | null) => void;
     setPasswordError: (message: string | null) => void;
     updateTimers: (
@@ -40,6 +46,8 @@ export const useForgotFlow = create<ForgotFlowState>()(
     persist(
         (set) => ({
             ...initialState,
+            setEmail: (email) =>
+                set({ email, challenge: null, newPassword: null, passwordError: null }),
             startChallenge: (email, challenge) =>
                 set({ email, challenge, newPassword: null, passwordError: null }),
             setNewPassword: (newPassword) => set({ newPassword }),

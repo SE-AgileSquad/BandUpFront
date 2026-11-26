@@ -1,23 +1,32 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/auth/form-field";
 import { PasswordInput } from "@/components/auth/password-input";
+import { StatusNotice } from "@/components/auth/status-notice";
 import { ROUTES } from "@/constants/routes";
-import { FORGOT_COPY } from "../constants/forgot";
+import { ApiError } from "@/types/api";
+import { useSendResetCodeMutation } from "../api/forgot.queries";
+import { FORGOT_COPY, FORGOT_LIMITS } from "../constants/forgot";
 import { useForgotFlow, useForgotFlowReady } from "../hooks/use-forgot-flow";
+import { maskEmail } from "../lib/mask-email";
 import {
     newPasswordSchema,
     type NewPasswordFormValues,
 } from "../schemas/forgot.schema";
 
-function NewPasswordFields({ onLeave }: { onLeave: () => void }) {
+type Notice = "rateLimited" | "general" | null;
+
+function NewPasswordFields({ email, onLeave }: { email: string; onLeave: () => void }) {
     const router = useRouter();
+    const sendCode = useSendResetCodeMutation();
+    const [notice, setNotice] = useState<Notice>(null);
 
     const {
         register,
@@ -42,11 +51,36 @@ function NewPasswordFields({ onLeave }: { onLeave: () => void }) {
     }, [setError]);
 
     const hasErrors = Object.keys(errors).length > 0;
-    const submitDisabled = isSubmitted && hasErrors;
+    const submitDisabled = sendCode.isPending || (isSubmitted && hasErrors);
 
-    const onSubmit = handleSubmit((values) => {
-        useForgotFlow.getState().setNewPassword(values.newPassword);
-        router.push(ROUTES.FORGOT_PASSWORD_VERIFY);
+    const onSubmit = handleSubmit(async (values) => {
+        setNotice(null);
+        try {
+            const response = await sendCode.mutateAsync({ email });
+            const now = new Date().getTime();
+            const expiresAt = response.expiresAt ? Date.parse(response.expiresAt) : Number.NaN;
+            const resendAvailableAt = response.resendAvailableAt
+                ? Date.parse(response.resendAvailableAt)
+                : Number.NaN;
+            useForgotFlow.getState().startChallenge(email, {
+                maskedEmail: response.maskedEmail ?? maskEmail(email),
+                expiresAt: Number.isFinite(expiresAt)
+                    ? expiresAt
+                    : now + FORGOT_LIMITS.codeTtlMs,
+                resendAvailableAt: Number.isFinite(resendAvailableAt)
+                    ? resendAvailableAt
+                    : now + FORGOT_LIMITS.resendCooldownMs,
+                lockedUntil: null,
+            });
+            useForgotFlow.getState().setNewPassword(values.newPassword);
+            router.push(ROUTES.FORGOT_PASSWORD_VERIFY);
+        } catch (error) {
+            if (error instanceof ApiError && error.status === 429 && error.code === "RATE_LIMITED") {
+                setNotice("rateLimited");
+                return;
+            }
+            setNotice("general");
+        }
     });
 
     const copy = FORGOT_COPY.newPassword;
@@ -88,14 +122,35 @@ function NewPasswordFields({ onLeave }: { onLeave: () => void }) {
                     <PasswordInput autoComplete="new-password" {...register("confirmPassword")} />
                 </FormField>
 
+                {notice === "rateLimited" && (
+                    <StatusNotice
+                        variant="error"
+                        title={FORGOT_COPY.email.rateLimited.title}
+                        description={FORGOT_COPY.email.rateLimited.description}
+                    />
+                )}
+                {notice === "general" && (
+                    <StatusNotice
+                        variant="error"
+                        title={FORGOT_COPY.email.generalError.title}
+                        description={FORGOT_COPY.email.generalError.description}
+                    />
+                )}
+
                 <Button
                     type="submit"
                     variant="gradient"
                     size="default"
                     className="w-full"
                     disabled={submitDisabled}
+                    aria-busy={sendCode.isPending}
                 >
-                    {copy.submit}
+                    {sendCode.isPending ? (
+                        <>
+                            <Loader2 aria-hidden className="size-5 animate-spin" />
+                            {copy.sending}
+                        </>
+                    ) : copy.submit}
                 </Button>
             </form>
 
@@ -116,19 +171,20 @@ function NewPasswordFields({ onLeave }: { onLeave: () => void }) {
 export function NewPasswordForm() {
     const router = useRouter();
     const ready = useForgotFlowReady();
-    const challenge = useForgotFlow((state) => state.challenge);
+    const email = useForgotFlow((state) => state.email);
     const leaving = useRef(false);
 
     useEffect(() => {
-        if (ready && !challenge && !leaving.current) {
+        if (ready && !email && !leaving.current) {
             router.replace(ROUTES.FORGOT_PASSWORD);
         }
-    }, [ready, challenge, router]);
+    }, [ready, email, router]);
 
-    if (!ready || !challenge) return <div aria-hidden className="min-h-[360px]" />;
+    if (!ready || !email) return <div aria-hidden className="min-h-[360px]" />;
 
     return (
         <NewPasswordFields
+            email={email}
             onLeave={() => {
                 leaving.current = true;
             }}

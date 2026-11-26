@@ -83,6 +83,10 @@ export function CaptchaField({ value, onChange, error, ref }: CaptchaFieldProps)
     }, [onChange]);
 
     useEffect(() => {
+        if (useLocalCaptcha) onChangeRef.current(localCaptchaToken);
+    }, [useLocalCaptcha]);
+
+    useEffect(() => {
         if (useLocalCaptcha || !env.turnstileSiteKey) return;
         let cancelled = false;
 

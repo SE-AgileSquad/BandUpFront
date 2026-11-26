@@ -8,17 +8,17 @@ export const FORGOT_METADATA = {
 } as const;
 
 export const FORGOT_LIMITS = {
-    codeLength: 5,
-    passwordMin: 8,
+    codeLength: 6,
+    passwordMin: 10,
     resendCooldownMs: 60_000,
     codeTtlMs: 5 * 60_000,
     lockMs: 15 * 60_000,
     maxWrongAttempts: 3,
 } as const;
 
-export const MOCK_VALID_CODE = "12345";
-export const MOCK_EXPIRED_CODE = "00000";
-export const MOCK_REJECTED_PASSWORD = "Password1";
+export const MOCK_VALID_CODE = "123456";
+export const MOCK_EXPIRED_CODE = "000000";
+export const MOCK_REJECTED_PASSWORD = "Password123";
 
 export const FORGOT_PANEL: {
     headline: string;
@@ -31,16 +31,14 @@ export const FORGOT_PANEL: {
 export const FORGOT_COPY = {
     email: {
         title: "Forgot your password?",
-        subtitle: "We’ll send a verification code to your email.",
+        subtitle: "Enter your email and choose a new password to continue.",
         label: "Email",
         placeholder: "you@example.com",
         helper: "We’ll only use this email for account recovery.",
         errors: {
             email: "Enter a valid email address.",
-            captcha: "Complete the CAPTCHA to continue.",
         },
-        submit: "Send code",
-        sending: "Sending…",
+        submit: "Continue",
         back: "Back to sign in",
         rateLimited: {
             title: "Too many attempts",
@@ -56,15 +54,16 @@ export const FORGOT_COPY = {
         title: "Choose a new password",
         subtitle: "Make it strong, and keep it just for BandUp.",
         newLabel: "New password",
-        newPlaceholder: "At least 8 characters",
-        newHelper: "At least 8 characters.",
+        newPlaceholder: "At least 10 characters",
+        newHelper: "At least 10 characters.",
         confirmLabel: "Confirm new password",
         errors: {
-            length: "Use at least 8 characters.",
+            length: "Use at least 10 characters.",
             mix: "Include both letters and numbers.",
             mismatch: "Passwords don’t match.",
         },
-        submit: "Save new password",
+        submit: "Send verification code",
+        sending: "Sending code…",
         back: "Back to sign in",
     },
     verify: {

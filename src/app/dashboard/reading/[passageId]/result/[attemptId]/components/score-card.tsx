@@ -3,9 +3,9 @@ import { ImageSlot } from "@/components/shared/image-slot";
 import type { ResultPayload } from "@/app/dashboard/reading/_shared/types";
 import { RESULT_COPY } from "../constants/result";
 
-function mascotForScore(correct: number) {
-    if (correct >= 7) return "/images/result/img_happy.png";
-    if (correct >= 4) return "/images/result/img_normal.png";
+function mascotForPercentage(percentage: number) {
+    if (percentage >= 70) return "/images/result/img_happy.png";
+    if (percentage >= 40) return "/images/result/img_normal.png";
     return "/images/result/img_sad.png";
 }
 
@@ -31,7 +31,7 @@ export function ScoreCard({ result }: { result: ResultPayload }) {
 
             <div className="absolute inset-x-0 top-[17%] mx-auto aspect-square w-[35%] max-w-[190px]">
                 <ImageSlot
-                    src={mascotForScore(result.correct)}
+                    src={mascotForPercentage(accuracy)}
                     alt={RESULT_COPY.mascotAlt}
                     sizes="(min-width: 640px) 160px, 34vw"
                     className="drop-shadow-md"

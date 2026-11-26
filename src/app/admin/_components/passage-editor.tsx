@@ -27,6 +27,12 @@ export function PassageEditor({ id }: { id: string }) {
 
 function PassageForm({ passage }: { passage?: Passage }) {
   const router = useRouter();
+  const readiness = passage?.publishReadiness ?? {
+    isReady: false,
+    errors: {
+      readiness: ["The passage API did not return publication readiness. Refresh this page; if this persists, the API response needs to include publishReadiness."],
+    },
+  };
   const [dirty, setDirty] = useState(false);
   const [reviewed, setReviewed] = useState(false);
   const [wordCount, setWordCount] = useState(passage?.wordCount ?? 0);
@@ -97,14 +103,14 @@ function PassageForm({ passage }: { passage?: Passage }) {
       <Panel id="review" className="scroll-mt-20 space-y-4">
         <h2 className="text-xl font-semibold">{passage.isReadOnly ? "Manage publication" : "Review & publish"}</h2>
         {!passage.isReadOnly && <>
-          <ReadinessNotice readiness={passage.publishReadiness} fieldLink={(key) => {
+          <ReadinessNotice readiness={readiness} fieldLink={(key) => {
             const questionId = key.match(/^questions\.([\da-f-]+)\./i)?.[1];
             if (questionId) return `#question-${questionId}`;
             if (key.startsWith("questions")) return "#questions";
             return key === "body" ? "#text" : "#details";
           }} />
           <label className="flex items-start gap-2 text-sm">
-            <input type="checkbox" className="mt-1 size-4 accent-primary" checked={reviewed} disabled={busy || dirty || !passage.publishReadiness.isReady} onChange={(event) => setReviewed(event.target.checked)} />
+            <input type="checkbox" className="mt-1 size-4 accent-primary" checked={reviewed} disabled={busy || dirty || !readiness.isReady} onChange={(event) => setReviewed(event.target.checked)} />
             I have reviewed the original text and every answer.
           </label>
           {dirty && <p className="text-sm text-muted-foreground">Save the passage before editing questions or publishing.</p>}
@@ -112,7 +118,7 @@ function PassageForm({ passage }: { passage?: Passage }) {
         <div className="flex flex-wrap gap-2">
           {!passage.isReadOnly && <>
             <Confirm label="Publish passage" title="Publish this passage?" description="Learners will be able to use this passage. To edit it after publication, create a draft revision."
-              disabled={busy || dirty || !reviewed || !passage.publishReadiness.isReady} action={async () => {
+              disabled={busy || dirty || !reviewed || !readiness.isReady} action={async () => {
                 try {
                   await publish.mutateAsync();
                 } catch (error) {

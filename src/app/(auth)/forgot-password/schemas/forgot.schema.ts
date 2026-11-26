@@ -9,10 +9,6 @@ export const emailSchema = z.object({
         .trim()
         .toLowerCase()
         .email(emailCopy.errors.email),
-    captchaToken: z
-        .string()
-        .nullable()
-        .refine((value) => Boolean(value), { message: emailCopy.errors.captcha }),
 });
 
 export const newPasswordSchema = z

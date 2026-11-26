@@ -5,14 +5,18 @@ import { useRouter } from "next/navigation";
 import { OtpVerification } from "@/components/auth/otp-verification";
 import { useOtpChallenge } from "@/hooks/use-otp-challenge";
 import { ROUTES } from "@/constants/routes";
-import type { OtpChallenge, OtpState } from "@/types/auth";
+import type { OtpState } from "@/types/auth";
 import { ApiError } from "@/types/api";
 import {
     useResendResetCodeMutation,
     useResetPasswordMutation,
 } from "../api/forgot.queries";
 import { FORGOT_COPY, FORGOT_LIMITS } from "../constants/forgot";
-import { useForgotFlow, useForgotFlowReady } from "../hooks/use-forgot-flow";
+import {
+    useForgotFlow,
+    useForgotFlowReady,
+    type ForgotChallenge,
+} from "../hooks/use-forgot-flow";
 import { maskEmail } from "../lib/mask-email";
 import type { FieldErrors } from "../types";
 
@@ -30,7 +34,7 @@ function readPasswordError(details: unknown) {
 }
 
 type VerifyContentProps = {
-    challenge: OtpChallenge;
+    challenge: ForgotChallenge;
     email: string;
     onLeave: () => void;
 };
@@ -55,12 +59,16 @@ function VerifyContent({ challenge, email, onLeave }: VerifyContentProps) {
 
             try {
                 await reset.mutateAsync({
-                    verificationId: challenge.verificationId,
+                    email,
                     code,
                     newPassword,
                 });
             } catch (error) {
-                if (error instanceof ApiError && error.status === 422) {
+                if (
+                    error instanceof ApiError &&
+                    error.status === 422 &&
+                    error.code !== "INVALID_PASSWORD_RESET_CODE"
+                ) {
                     setNewPassword(null);
                     setPasswordError(
                         readPasswordError(error.details) ?? FORGOT_COPY.verify.passwordFallback,
@@ -70,7 +78,24 @@ function VerifyContent({ challenge, email, onLeave }: VerifyContentProps) {
                 throw error;
             }
         },
-        resendFn: () => resend.mutateAsync({ verificationId: challenge.verificationId }),
+        resendFn: async () => {
+            const response = await resend.mutateAsync({ email });
+            const now = Date.now();
+            const expiresAt = response.expiresAt ? Date.parse(response.expiresAt) : Number.NaN;
+            const resendAvailableAt = response.resendAvailableAt
+                ? Date.parse(response.resendAvailableAt)
+                : Number.NaN;
+            return {
+                expiresAt: new Date(
+                    Number.isFinite(expiresAt) ? expiresAt : now + FORGOT_LIMITS.codeTtlMs,
+                ).toISOString(),
+                resendAvailableAt: new Date(
+                    Number.isFinite(resendAvailableAt)
+                        ? resendAvailableAt
+                        : now + FORGOT_LIMITS.resendCooldownMs,
+                ).toISOString(),
+            };
+        },
         messages: MESSAGES,
         onLocked: setLockedUntil,
         onTimers: updateTimers,

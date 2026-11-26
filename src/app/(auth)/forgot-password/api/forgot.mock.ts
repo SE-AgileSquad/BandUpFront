@@ -23,11 +23,11 @@ function fail(
     throw new ApiError(code, status, code, { code, ...extra });
 }
 
-function getChallenge(id: string) {
-    let entry = challenges.get(id);
+function getChallenge(email: string) {
+    let entry = challenges.get(email);
     if (!entry) {
         entry = { wrongAttempts: 0, lockedUntil: null };
-        challenges.set(id, entry);
+        challenges.set(email, entry);
     }
     return entry;
 }
@@ -35,22 +35,19 @@ function getChallenge(id: string) {
 export const forgotApi: ForgotApi = {
     async sendCode({ email }) {
         await delay();
-        const verificationId = `mock-forgot-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-        challenges.set(verificationId, { wrongAttempts: 0, lockedUntil: null });
+        challenges.set(email, { wrongAttempts: 0, lockedUntil: null });
 
         const now = Date.now();
         return {
-            verificationId,
             maskedEmail: maskEmail(email),
-            codeLength: 5,
             expiresAt: iso(now + FORGOT_LIMITS.codeTtlMs),
             resendAvailableAt: iso(now + FORGOT_LIMITS.resendCooldownMs),
         };
     },
 
-    async resendCode({ verificationId }) {
+    async resendCode({ email }) {
         await delay();
-        const entry = getChallenge(verificationId);
+        const entry = getChallenge(email);
         entry.wrongAttempts = 0;
         entry.lockedUntil = null;
 
@@ -61,9 +58,9 @@ export const forgotApi: ForgotApi = {
         };
     },
 
-    async reset({ verificationId, code, newPassword }) {
+    async reset({ email, code, newPassword }) {
         await delay();
-        const entry = getChallenge(verificationId);
+        const entry = getChallenge(email);
 
         if (entry.lockedUntil && entry.lockedUntil > Date.now()) {
             fail(429, "TOO_MANY_ATTEMPTS", { lockedUntil: iso(entry.lockedUntil) });

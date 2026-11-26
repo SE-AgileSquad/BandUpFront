@@ -176,8 +176,11 @@ export function OtpVerification({
                 <StatusNotice
                     variant="error"
                     title="That code isn’t right"
-                    description={`Check the five digits and try again. ${effective.attemptsRemaining} ${effective.attemptsRemaining === 1 ? "attempt" : "attempts"
-                        } remaining.`}
+                    description={
+                        effective.attemptsRemaining === undefined
+                            ? `Check all ${codeLength} digits and try again.`
+                            : `Check all ${codeLength} digits and try again. ${effective.attemptsRemaining} ${effective.attemptsRemaining === 1 ? "attempt" : "attempts"} remaining.`
+                    }
                 />
             )}
             {expired && (

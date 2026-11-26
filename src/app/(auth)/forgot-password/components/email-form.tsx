@@ -1,87 +1,36 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CaptchaField } from "@/components/auth/captcha-field";
 import { FieldInput, FormField } from "@/components/auth/form-field";
-import { StatusNotice } from "@/components/auth/status-notice";
 import { ROUTES } from "@/constants/routes";
-import { ApiError } from "@/types/api";
-import { useSendResetCodeMutation } from "../api/forgot.queries";
 import { FORGOT_COPY } from "../constants/forgot";
 import { useForgotFlow, useForgotFlowReady } from "../hooks/use-forgot-flow";
-import { maskEmail } from "../lib/mask-email";
 import { emailSchema, type EmailFormValues } from "../schemas/forgot.schema";
-
-type Notice = "rateLimited" | "general" | null;
 
 function EmailFormFields() {
     const router = useRouter();
-    const mutation = useSendResetCodeMutation();
-    const [notice, setNotice] = useState<Notice>(null);
 
     const {
         register,
-        control,
         handleSubmit,
-        setError,
-        setValue,
-        watch,
         formState: { errors, isSubmitted },
     } = useForm<EmailFormValues>({
         resolver: zodResolver(emailSchema),
         mode: "onSubmit",
         reValidateMode: "onChange",
-        defaultValues: { email: useForgotFlow.getState().email, captchaToken: null },
+        defaultValues: { email: useForgotFlow.getState().email },
     });
 
-    useEffect(() => {
-        const subscription = watch(() => setNotice(null));
-        return () => subscription.unsubscribe();
-    }, [watch]);
-
     const hasErrors = Object.keys(errors).length > 0;
-    const submitDisabled = mutation.isPending || (isSubmitted && hasErrors);
+    const submitDisabled = isSubmitted && hasErrors;
 
-    const onSubmit = handleSubmit(async (values) => {
-        setNotice(null);
-
-        try {
-            const response = await mutation.mutateAsync({
-                email: values.email,
-                captchaToken: values.captchaToken ?? "",
-            });
-
-            useForgotFlow.getState().startChallenge(values.email, {
-                verificationId: response.verificationId,
-                maskedEmail: response.maskedEmail ?? maskEmail(values.email),
-                expiresAt: Date.parse(response.expiresAt),
-                resendAvailableAt: Date.parse(response.resendAvailableAt),
-                lockedUntil: null,
-            });
-            router.push(ROUTES.FORGOT_PASSWORD_NEW);
-        } catch (error) {
-            if (error instanceof ApiError) {
-                if (error.status === 422 && error.code === "CAPTCHA_INVALID") {
-                    setValue("captchaToken", null);
-                    setError("captchaToken", {
-                        type: "server",
-                        message: FORGOT_COPY.email.errors.captcha,
-                    });
-                    return;
-                }
-                if (error.status === 429 && error.code === "RATE_LIMITED") {
-                    setNotice("rateLimited");
-                    return;
-                }
-            }
-            setNotice("general");
-        }
+    const onSubmit = handleSubmit((values) => {
+        useForgotFlow.getState().setEmail(values.email);
+        router.push(ROUTES.FORGOT_PASSWORD_NEW);
     });
 
     const copy = FORGOT_COPY.email;
@@ -114,50 +63,14 @@ function EmailFormFields() {
                     />
                 </FormField>
 
-                <Controller
-                    control={control}
-                    name="captchaToken"
-                    render={({ field }) => (
-                        <CaptchaField
-                            ref={field.ref}
-                            value={field.value}
-                            onChange={field.onChange}
-                            error={errors.captchaToken?.message}
-                        />
-                    )}
-                />
-
-                {notice === "rateLimited" && (
-                    <StatusNotice
-                        variant="error"
-                        title={copy.rateLimited.title}
-                        description={copy.rateLimited.description}
-                    />
-                )}
-                {notice === "general" && (
-                    <StatusNotice
-                        variant="error"
-                        title={copy.generalError.title}
-                        description={copy.generalError.description}
-                    />
-                )}
-
                 <Button
                     type="submit"
                     variant="gradient"
                     size="default"
                     className="w-full"
                     disabled={submitDisabled}
-                    aria-busy={mutation.isPending}
                 >
-                    {mutation.isPending ? (
-                        <>
-                            <Loader2 aria-hidden className="size-5 animate-spin" />
-                            {copy.sending}
-                        </>
-                    ) : (
-                        copy.submit
-                    )}
+                    {copy.submit}
                 </Button>
             </form>
 

@@ -1,28 +1,26 @@
 import type { OtpErrorCode } from "@/types/auth";
 
-export type SendCodePayload = { email: string; captchaToken: string };
+export type SendCodePayload = { email: string };
 
 export type SendCodeResponse = {
-    verificationId: string;
     maskedEmail?: string;
-    codeLength: 5;
-    expiresAt: string;
-    resendAvailableAt: string;
+    expiresAt?: string;
+    resendAvailableAt?: string;
 };
 
-export type ResendCodePayload = { verificationId: string };
-export type ResendCodeResponse = { expiresAt: string; resendAvailableAt: string };
+export type ResendCodePayload = { email: string };
+export type ResendCodeResponse = SendCodeResponse;
 
 export type ResetPayload = {
-    verificationId: string;
+    email: string;
     code: string;
     newPassword: string;
 };
 
 export type ForgotErrorCode =
-    | "CAPTCHA_INVALID"
     | "RATE_LIMITED"
     | "PASSWORD_REJECTED"
+    | "INVALID_PASSWORD_RESET_CODE"
     | OtpErrorCode;
 
 export type FieldErrors = Record<string, string | string[]>;

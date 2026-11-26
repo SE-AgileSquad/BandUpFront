@@ -22,7 +22,7 @@ export type OtpChallenge = {
 
 export type OtpState =
   | { kind: "idle" }
-  | { kind: "wrong"; attemptsRemaining: number }
+  | { kind: "wrong"; attemptsRemaining?: number }
   | { kind: "expired" }
   | { kind: "locked"; lockedUntil: number }
   | { kind: "success" };

@@ -35,6 +35,7 @@ export const REGISTER_COPY = {
         passwordLength: "Use at least 8 characters.",
         passwordMix: "Include both letters and numbers.",
         captcha: "Complete the CAPTCHA to continue.",
+        captchaFailed: "CAPTCHA verification failed. Please complete it again.",
         terms: "Accept the terms to create your account.",
     },
     terms: {

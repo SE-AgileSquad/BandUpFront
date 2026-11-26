@@ -7,17 +7,17 @@ import type {
 
 export const forgotApi: ForgotApi = {
     async sendCode(payload) {
-        const { data } = await api.post<SendCodeResponse>("/api/auth/password/forgot", payload);
-        return data;
+        const { data } = await api.post<SendCodeResponse>("/api/auth/forgot-password", payload);
+        return data ?? {};
     },
     async resendCode(payload) {
         const { data } = await api.post<ResendCodeResponse>(
-            "/api/auth/password/forgot/resend",
+            "/api/auth/forgot-password",
             payload,
         );
-        return data;
+        return data ?? {};
     },
     async reset(payload) {
-        await api.post("/api/auth/password/reset", payload);
+        await api.post("/api/auth/reset-password", payload);
     },
 };
