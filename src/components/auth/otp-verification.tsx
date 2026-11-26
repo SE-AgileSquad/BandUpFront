@@ -23,6 +23,8 @@ type OtpVerificationProps = {
     isResending: boolean;
     notice?: OtpNotice | null;
     changeNumberHref: string;
+    changeLabel?: string;
+    onChangeTarget?: () => void;
     onVerify: (code: string) => void | Promise<void>;
     onResend: () => Promise<boolean>;
     successTitle?: string;
@@ -48,6 +50,8 @@ export function OtpVerification({
     isResending,
     notice,
     changeNumberHref,
+    changeLabel = "Change number",
+    onChangeTarget,
     onVerify,
     onResend,
     successTitle,
@@ -241,9 +245,10 @@ export function OtpVerification({
 
                     <Link
                         href={changeNumberHref}
+                        onClick={onChangeTarget}
                         className="self-center rounded-sm text-[14px] leading-[21px] font-medium text-primary outline-none hover:underline focus-visible:ring-2 focus-visible:ring-primary/25"
                     >
-                        Change number
+                        {changeLabel}
                     </Link>
                 </>
             )}
