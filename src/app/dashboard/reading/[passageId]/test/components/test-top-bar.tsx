@@ -1,6 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
+import { Logo } from "@/components/layout/logo";
 import { Button } from "@/components/ui/button";
 import { TEST_COPY } from "../constants/test";
 import { TimerPill } from "./timer-pill";
@@ -14,20 +15,6 @@ type TestTopBarProps = {
     onSubmit: () => void;
 };
 
-function BrandMark() {
-    return (
-        <div className="flex items-center gap-[10px]">
-            <span
-                aria-hidden
-                className="grid size-10 place-items-center rounded-logo bg-primary text-[22px] leading-none font-bold text-primary-foreground"
-            >
-                B
-            </span>
-            <span className="text-logo text-foreground">BandUp</span>
-        </div>
-    );
-}
-
 export function TestTopBar({
     answered,
     total,
@@ -39,9 +26,9 @@ export function TestTopBar({
     const submitLabel = locked ? TEST_COPY.submitting : TEST_COPY.submit;
 
     return (
-        <header className="sticky top-0 z-20 border-b border-border bg-card lg:static">
-            <div className="hidden items-center justify-between px-10 py-[14px] lg:flex">
-                <BrandMark />
+        <header className="sticky top-0 z-30 border-b border-border bg-card lg:fixed lg:inset-x-0 lg:top-0">
+            <div className="hidden h-[68px] items-center justify-between px-4 lg:flex">
+                <Logo />
                 <p className="text-[15px] leading-[22px] font-semibold">
                     {TEST_COPY.answered(answered, total)}
                 </p>

@@ -23,7 +23,7 @@ export const TEST_COPY = {
         },
         critical: {
             title: "1 minute left",
-            text: "Your test will submit automatically at 00:00. Review any unanswered questions now.",
+        text: "Your answers will be scored automatically at 00:00. Review any unanswered questions now.",
         },
     },
     passage: {
@@ -36,7 +36,7 @@ export const TEST_COPY = {
     },
     completion: { label: "Your answer" },
     actions: { clear: "Clear answer", previous: "Previous", next: "Next" },
-    saved: (n: number) => `${n} ${plural(n, "answer", "answers")} saved on this device`,
+    saved: (n: number) => `${n} ${plural(n, "answer", "answers")} saved to your attempt`,
     locked: "Answers locked while submitting",
     loading: "Loading your test",
     loadError: {
@@ -60,8 +60,8 @@ export const TEST_COPY = {
         title: "Leave this test?",
         text: (answered: number) =>
             `${answered > 0
-                ? `Your ${answered} ${plural(answered, "answer is", "answers are")} saved locally on this device.`
-                : "Your progress is saved locally on this device."
+                ? `Your ${answered} ${plural(answered, "answer is", "answers are")} saved to your attempt.`
+                : "Your progress is saved to your attempt."
             } You can return to this test later; the timer will not reset.`,
         leave: "Leave test",
         stay: "Keep practising",
@@ -69,7 +69,7 @@ export const TEST_COPY = {
     sessionExpired: {
         title: "Sign in again to continue",
         text: (title: string, questionNumber: number) =>
-            `Your session expired. Your answers are kept on this device. Sign in again and return to this same test — ${title}, question ${questionNumber}.`,
+            `Your session expired. Sign in again and return to this test — ${title}, question ${questionNumber}. Answers already synced to your attempt are preserved.`,
         chip: "Answers protected",
         destination: "Return destination: this test, not the dashboard.",
         action: "Sign in again",

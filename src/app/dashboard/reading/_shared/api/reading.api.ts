@@ -15,6 +15,7 @@ import {
 } from "./reading-contract";
 
 const attemptsPath = "/api/attempts";
+const answerUpdates = new Map<string, Promise<void>>();
 
 function submitViaLocalFrontend() {
   return process.env.NODE_ENV === "development" && typeof window !== "undefined" &&
@@ -24,7 +25,7 @@ function submitViaLocalFrontend() {
 export const readingApi: ReadingApi = {
   async listPassages() {
     const [{ data: passages }, { data: attempts }] = await Promise.all([
-      api.get<{ items: PassageSummaryDto[] }>(READING_API_PREFIX + "/passages"),
+      api.get<{ items: PassageSummaryDto[] }>(READING_API_PREFIX + "/passages?page=1&pageSize=20"),
       api.get<AttemptSummaryDto[]>(attemptsPath + "/summary"),
     ]);
     const byPassage = new Map(attempts.map((attempt) => [attempt.passageId, attempt]));
@@ -35,6 +36,28 @@ export const readingApi: ReadingApi = {
     const { data: passage } = await api.get<PassageDto>(`${READING_API_PREFIX}/passages/${encodeURIComponent(passageId)}`);
     const { data: attempt } = await api.post<AttemptDto>(attemptsPath, { passageId });
     return toStartedAttempt(attempt, passage);
+  },
+  async updateAnswer(attemptId, questionId, selectedAnswer) {
+    const key = `${attemptId}:${questionId}`;
+    const previous = answerUpdates.get(key) ?? Promise.resolve();
+    const pending = previous.catch(() => undefined).then(async () => {
+      await api.put(
+        `${attemptsPath}/${encodeURIComponent(attemptId)}/answers/${encodeURIComponent(questionId)}`,
+        { selectedAnswer },
+      );
+    });
+    answerUpdates.set(key, pending);
+    try {
+      await pending;
+    } finally {
+      if (answerUpdates.get(key) === pending) answerUpdates.delete(key);
+    }
+  },
+  async waitForAnswerUpdates(attemptId) {
+    const prefix = `${attemptId}:`;
+    await Promise.all([...answerUpdates.entries()]
+      .filter(([key]) => key.startsWith(prefix))
+      .map(([, pending]) => pending.catch(() => undefined)));
   },
   async submitAttempt(attemptId, payload) {
     const useLocalProxy = submitViaLocalFrontend();

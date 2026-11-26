@@ -14,19 +14,16 @@ export const LIST_COPY = {
     meta: {
         fresh: (questions: number, minutes: number) => `${questions} questions · ${minutes} minutes`,
         inProgress: (clock: string, questions: number) => `${clock} left · ${questions} questions`,
-        unsubmitted: "Answers saved on this device",
         completed: (correct: number, total: number) => `${correct} / ${total} correct`,
     },
     badges: {
         new: "New",
         in_progress: "In progress",
-        unsubmitted: "Not submitted",
         completed: "Completed",
     },
     actions: {
         new: "Start",
         in_progress: "Continue",
-        unsubmitted: "Submit",
         completed: "Review",
     },
     empty: {
@@ -42,14 +39,14 @@ export const LIST_COPY = {
     },
     start: {
         title: "Before you start",
-        text: "10 questions · 20 minutes. The timer starts when you begin. Unanswered questions are marked wrong. Your answers are saved on this device.",
+        text: "10 questions · 20 minutes. The timer starts when you begin. Unanswered questions are marked wrong. Your answers are saved to your attempt as you go.",
         hint: "Choose True, False or Not Given for each question. You can review your answers before submitting.",
         imageAlt: "Hourglass",
         confirm: "Start test",
         cancel: "Cancel",
     },
     resume: {
-        title: "Your test is saved",
+        title: "Your test is in progress",
         text: (clock: string, answered: number | null, total: number) =>
             `${clock} remaining${answered !== null ? ` · ${answered} / ${total} answers saved` : ""
             }. Continue the same test from where you left off.`,

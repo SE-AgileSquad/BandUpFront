@@ -1,54 +1,35 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { READING_PATHS } from "@/app/dashboard/reading/_shared/constants/reading";
-import { useAuth } from "@/hooks/use-auth";
 import { LIST_COPY, type FilterKey } from "../constants/list";
 import { useListItems, type ListItem } from "../hooks/use-list-items";
 import { usePassages } from "../hooks/use-passages";
-import { useRecovery } from "../hooks/use-recovery";
 import { ListEmpty } from "./list-empty";
 import { ListFilters } from "./list-filters";
 import { ListSkeleton } from "./list-skeleton";
 import { PassageCard } from "./passage-card";
-import { RecoveryDialog } from "./recovery-dialog";
 import { ResumeDialog } from "./resume-dialog";
 import { StartDialog } from "./start-dialog";
 
 function matches(filter: FilterKey, item: ListItem) {
     if (filter === "all") return true;
     if (filter === "in_progress") {
-        return item.state.kind === "in_progress" || item.state.kind === "unsubmitted";
+        return item.state.kind === "in_progress";
     }
     return item.state.kind === filter;
 }
 
 export function ReadingListView() {
     const router = useRouter();
-    const pathname = usePathname();
-    const searchParams = useSearchParams();
-    const { user } = useAuth();
-    const userId = user?.id ?? null;
 
     const { passages, dataUpdatedAt, isPending, isError, refetch } = usePassages();
-    const items = useListItems({ passages, dataUpdatedAt, userId });
-    const recovery = useRecovery(userId);
+    const items = useListItems({ passages, dataUpdatedAt });
 
     const [filter, setFilter] = useState<FilterKey>("all");
     const [startItem, setStartItem] = useState<ListItem | null>(null);
     const [resumeItem, setResumeItem] = useState<ListItem | null>(null);
-
-    const recoverId = searchParams.get("recover");
-    const recoverHandled = useRef(false);
-    const { run } = recovery;
-
-    useEffect(() => {
-        if (!recoverId || !userId || recoverHandled.current) return;
-        recoverHandled.current = true;
-        router.replace(pathname);
-        void run(recoverId);
-    }, [recoverId, userId, pathname, router, run]);
 
     function handleSelect(item: ListItem) {
         switch (item.state.kind) {
@@ -57,9 +38,6 @@ export function ReadingListView() {
                 break;
             case "in_progress":
                 setResumeItem(item);
-                break;
-            case "unsubmitted":
-                void recovery.run(item.passage.id);
                 break;
             case "completed":
                 if (item.state.href) router.push(item.state.href);
@@ -108,11 +86,6 @@ export function ReadingListView() {
                 onConfirm={() => {
                     if (resumeItem) router.push(READING_PATHS.test(resumeItem.passage.id));
                 }}
-            />
-            <RecoveryDialog
-                state={recovery.state}
-                onRetry={recovery.retry}
-                onDismiss={recovery.dismiss}
             />
         </>
     );

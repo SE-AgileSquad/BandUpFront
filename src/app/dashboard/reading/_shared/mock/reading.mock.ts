@@ -25,6 +25,7 @@ type MockAttempt = {
     startedAt: number;
     endsAt: number;
     submittedAt: number | null;
+    answers: Record<string, string>;
 };
 
 type MockState = {
@@ -68,6 +69,7 @@ function seed(): MockState {
                 startedAt: now - 8 * 60_000,
                 endsAt: now + 12 * 60_000,
                 submittedAt: null,
+                answers: {},
             },
             "mock-attempt-tea": {
                 id: "mock-attempt-tea",
@@ -75,6 +77,7 @@ function seed(): MockState {
                 startedAt: now - 86_400_000,
                 endsAt: now - 86_400_000 + DURATION_MS,
                 submittedAt: now - 86_400_000 + 15 * 60_000,
+                answers: teaAnswers,
             },
         },
         results: { "mock-attempt-tea": tea },
@@ -112,6 +115,20 @@ function findActive(state: MockState, passageId: string, now: number) {
     );
 }
 
+function finalizeExpired(state: MockState, now: number) {
+    let changed = false;
+    for (const attempt of Object.values(state.attempts)) {
+        if (attempt.submittedAt !== null || attempt.endsAt > now) continue;
+        const title = PASSAGE_CATALOG.find((passage) => passage.id === attempt.passageId)?.title ?? "";
+        const result = scoreAnswers(attempt.passageId, attempt.id, title, attempt.answers ?? {});
+        attempt.submittedAt = now;
+        state.results[attempt.id] = result;
+        state.completed[attempt.passageId] = { attemptId: attempt.id, correct: result.correct, total: result.total };
+        changed = true;
+    }
+    if (changed) persist(state);
+}
+
 function toAttempt(attempt: MockAttempt, now: number) {
     return {
         id: attempt.id,
@@ -131,6 +148,7 @@ export const readingMockApi: ReadingApi = {
         await sleep(DELAY_MS);
         const state = load();
         const now = Date.now();
+        finalizeExpired(state, now);
 
         const items = PASSAGE_CATALOG.map((passage): PassageSummary => {
             const active = findActive(state, passage.id, now);
@@ -160,7 +178,14 @@ export const readingMockApi: ReadingApi = {
 
         const state = load();
         const now = Date.now();
+        finalizeExpired(state, now);
         let attempt = findActive(state, passageId, now);
+
+        if (!attempt) {
+            attempt = Object.values(state.attempts).find(
+                (entry) => entry.passageId === passageId && entry.submittedAt !== null && entry.endsAt <= now,
+            );
+        }
 
         if (!attempt) {
             attempt = {
@@ -169,13 +194,31 @@ export const readingMockApi: ReadingApi = {
                 startedAt: now,
                 endsAt: now + DURATION_MS,
                 submittedAt: null,
+                answers: {},
             };
             state.attempts[attempt.id] = attempt;
             persist(state);
         }
 
-        return { attempt: toAttempt(attempt, now), passage };
+        if (!attempt) fail(500, "ATTEMPT_START_FAILED");
+
+        return { attempt: toAttempt(attempt, now), passage, savedAnswers: attempt.answers ?? {} };
     },
+
+    async updateAnswer(attemptId, questionId, selectedAnswer) {
+        await sleep(DELAY_MS);
+        const state = load();
+        const attempt = state.attempts[attemptId];
+        if (!attempt) fail(404, "NOT_FOUND");
+        if (attempt.submittedAt !== null) fail(409, "ATTEMPT_ALREADY_SUBMITTED");
+        const value = selectedAnswer.trim();
+        attempt.answers ??= {};
+        if (value) attempt.answers[questionId] = value.toUpperCase();
+        else delete attempt.answers[questionId];
+        persist(state);
+    },
+
+    async waitForAnswerUpdates() {},
 
     async submitAttempt(attemptId, payload) {
         if (flag("failSubmit")) {
@@ -223,7 +266,17 @@ export const readingMockApi: ReadingApi = {
 
     async getResult(attemptId) {
         await sleep(DELAY_MS);
-        const result = load().results[attemptId];
+        const state = load();
+        let result = state.results[attemptId];
+        const attempt = state.attempts[attemptId];
+        if (!result && attempt && attempt.submittedAt === null && Date.now() >= attempt.endsAt) {
+            const title = PASSAGE_CATALOG.find((passage) => passage.id === attempt.passageId)?.title ?? "";
+            result = scoreAnswers(attempt.passageId, attempt.id, title, attempt.answers);
+            attempt.submittedAt = Date.now();
+            state.results[attempt.id] = result;
+            state.completed[attempt.passageId] = { attemptId: attempt.id, correct: result.correct, total: result.total };
+            persist(state);
+        }
         if (!result) fail(404, "NOT_FOUND");
         return result;
     },

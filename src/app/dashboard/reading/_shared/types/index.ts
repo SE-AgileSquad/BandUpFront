@@ -3,7 +3,6 @@ export type QuestionType = "tfng" | "completion";
 export type TfngValue = "TRUE" | "FALSE" | "NOT GIVEN";
 export type SubmitReason = "manual" | "timeup";
 export type MobileTab = "passage" | "questions";
-export type DraftStatus = "in_progress" | "pending_submit";
 
 export type PassageSummary = {
     id: string;
@@ -48,9 +47,6 @@ export type StartAttemptResponse = { attempt: Attempt; passage: Passage; savedAn
 export type SubmitPayload = {
     answers: Answers;
     idempotencyKey: string;
-    clientSubmittedAt: string;
-    recovered?: true;
-    originalAttemptId?: string;
 };
 
 export type BreakdownItem = { label: string; correct: number; total: number };
@@ -69,8 +65,7 @@ export type ResultPayload = {
     newParaphraseCount?: number;
 };
 
-export type Draft = {
-    v: 1;
+export type TestProgress = {
     passageId: string;
     attemptId: string;
     startedAt: string;
@@ -79,18 +74,13 @@ export type Draft = {
     answers: Answers;
     currentIndex: number;
     mobileTab: MobileTab;
-    status: DraftStatus;
-    idempotencyKey?: string;
-    recoveryAttemptId?: string;
-    savedAt: number;
-    checksum: string;
 };
-
-export type DraftInput = Omit<Draft, "v" | "savedAt" | "checksum">;
 
 export type ReadingApi = {
     listPassages: () => Promise<{ items: PassageSummary[] }>;
     startAttempt: (passageId: string) => Promise<StartAttemptResponse>;
+    updateAnswer: (attemptId: string, questionId: string, selectedAnswer: string) => Promise<void>;
+    waitForAnswerUpdates: (attemptId: string) => Promise<void>;
     submitAttempt: (attemptId: string, payload: SubmitPayload) => Promise<ResultPayload>;
     getResult: (attemptId: string) => Promise<ResultPayload>;
 };

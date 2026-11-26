@@ -2,7 +2,6 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { submitAttempt } from "../lib/submit-attempt";
-import type { Draft } from "../types";
 import { readingApi } from "./index";
 
 export const queryKeys = {
@@ -26,13 +25,23 @@ export function useStartAttemptMutation() {
     });
 }
 
+export function useUpdateAnswerMutation() {
+    return useMutation({
+        mutationKey: ["reading", "answer"],
+        retry: 2,
+        mutationFn: (input: { attemptId: string; questionId: string; selectedAnswer: string }) =>
+            readingApi.updateAnswer(input.attemptId, input.questionId, input.selectedAnswer),
+    });
+}
+
 export function useSubmitAttemptMutation() {
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationKey: ["reading", "submit"],
         retry: 0,
-        mutationFn: (input: { draft: Draft; userId: string }) => submitAttempt(input),
+        mutationFn: (input: { attemptId: string; answers: Record<string, string>; idempotencyKey: string }) =>
+            submitAttempt(input),
         onSuccess: (result) => {
             queryClient.setQueryData(queryKeys.result(result.attemptId), result);
             void queryClient.invalidateQueries({ queryKey: queryKeys.passages });

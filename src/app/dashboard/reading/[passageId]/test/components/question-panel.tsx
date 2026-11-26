@@ -1,6 +1,5 @@
 "use client";
 
-import { Check } from "lucide-react";
 import type { Answers, Question } from "@/app/dashboard/reading/_shared/types";
 import { Button } from "@/components/ui/button";
 import { TEST_COPY } from "../constants/test";
@@ -14,7 +13,6 @@ type QuestionPanelProps = {
     answers: Answers;
     answeredCount: number;
     locked: boolean;
-    storageOk: boolean;
     onSelect: (index: number) => void;
     onAnswer: (questionId: string, value: string) => void;
     onClear: (questionId: string) => void;
@@ -28,7 +26,6 @@ export function QuestionPanel({
     answers,
     answeredCount,
     locked,
-    storageOk,
     onSelect,
     onAnswer,
     onClear,
@@ -111,14 +108,7 @@ export function QuestionPanel({
             <div aria-live="polite" className="text-[12px] leading-[1.4] text-muted-foreground">
                 {locked ? (
                     <p>{TEST_COPY.locked}</p>
-                ) : (
-                    storageOk && (
-                        <p className="flex items-center gap-1.5">
-                            <Check aria-hidden className="size-3" />
-                            {TEST_COPY.saved(answeredCount)}
-                        </p>
-                    )
-                )}
+                ) : <p>{TEST_COPY.saved(answeredCount)}</p>}
             </div>
         </section>
     );

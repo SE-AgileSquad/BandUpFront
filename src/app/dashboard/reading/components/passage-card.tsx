@@ -9,7 +9,6 @@ import { PassageImage } from "./passage-image";
 const BADGE_STYLES: Record<ListState["kind"], string> = {
     new: "bg-primary-soft text-primary",
     in_progress: "bg-warning-soft text-warning-soft-foreground",
-    unsubmitted: "bg-warning-soft text-warning-soft-foreground",
     completed: "bg-success-bg text-success",
 };
 
@@ -22,8 +21,6 @@ function metaFor(item: ListItem) {
             return meta.fresh(passage.questionCount, passage.durationMinutes);
         case "in_progress":
             return meta.inProgress(formatClockFromMs(state.remainingMs), passage.questionCount);
-        case "unsubmitted":
-            return meta.unsubmitted;
         case "completed":
             return state.result
                 ? meta.completed(state.result.correct, state.result.total)

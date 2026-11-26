@@ -12,7 +12,7 @@ function mascotForPercentage(percentage: number) {
 export function ScoreCard({ result }: { result: ResultPayload }) {
     const ratio = result.total > 0 ? result.correct / result.total : 0;
     const accuracy = Math.round(ratio * 100);
-    const illuminatedStars = result.correct >= 7 ? 3 : result.correct >= 4 ? 2 : 1;
+    const illuminatedStars = accuracy >= 70 ? 3 : accuracy >= 40 ? 2 : 1;
     const answered = result.answered ?? result.breakdown.reduce((sum, item) => sum + item.total, 0);
 
     return (

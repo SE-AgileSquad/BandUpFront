@@ -48,15 +48,15 @@ function ErrorView({ onRetry, onBack }: { onRetry: () => void; onBack: () => voi
 
 export function TestScreen({ passageId }: { passageId: string }) {
     const session = useTestSession(passageId);
-    const { phase, passage, draft } = session;
+    const { phase, passage, progress } = session;
 
     if (phase.kind === "error") {
         return <ErrorView onRetry={session.retryLoad} onBack={session.leave} />;
     }
-    if (!passage || !draft) return <LoadingView />;
+    if (!passage || !progress) return <LoadingView />;
 
     const total = session.questions.length;
-    const tab = draft.mobileTab;
+    const tab = progress.mobileTab;
 
     return (
         <div className="min-h-screen bg-background">
@@ -68,10 +68,13 @@ export function TestScreen({ passageId }: { passageId: string }) {
                 onLeave={session.openLeave}
                 onSubmit={session.openConfirm}
             />
-            <TimerNotice seconds={session.remainingSeconds} />
+            <div aria-hidden className="hidden h-[68px] lg:block" />
+            <div className="lg:pr-[440px]">
+                <TimerNotice seconds={session.remainingSeconds} />
+            </div>
             <MobileTabs value={tab} onChange={session.setTab} />
 
-            <main className="px-4 py-7 lg:px-10">
+            <main className="px-4 py-7 lg:py-5 lg:pl-10 lg:pr-[480px]">
                 <div className="flex flex-col gap-5 lg:flex-row">
                     <div
                         id={PANEL_IDS.passage}
@@ -84,17 +87,16 @@ export function TestScreen({ passageId }: { passageId: string }) {
                         id={PANEL_IDS.questions}
                         role="tabpanel"
                         className={cn(
-                            "lg:sticky lg:top-6 lg:block lg:w-[440px] lg:shrink-0 lg:self-start",
+                            "lg:fixed lg:top-[68px] lg:right-0 lg:bottom-0 lg:z-20 lg:block lg:w-[440px] lg:overflow-hidden lg:border-l lg:border-border lg:bg-background lg:p-4",
                             tab === "questions" ? "block" : "hidden",
                         )}
                     >
                         <QuestionPanel
                             questions={session.questions}
-                            currentIndex={draft.currentIndex}
+                            currentIndex={progress.currentIndex}
                             answers={session.answers}
                             answeredCount={session.answeredCount}
                             locked={session.locked}
-                            storageOk={session.storageOk}
                             onSelect={session.goTo}
                             onAnswer={session.setAnswer}
                             onClear={session.clearAnswer}
@@ -133,7 +135,7 @@ export function TestScreen({ passageId }: { passageId: string }) {
             <SessionExpiredDialog
                 open={phase.kind === "sessionExpired"}
                 title={passage.title}
-                questionNumber={draft.currentIndex + 1}
+                questionNumber={progress.currentIndex + 1}
                 onSignIn={session.signIn}
             />
         </div>
