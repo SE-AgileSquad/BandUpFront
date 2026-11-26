@@ -11,7 +11,7 @@ Sign in through the existing BandUp login. The site navigation and learner dashb
 | `/admin/mapping` | `/api/admin/lesson-mappings` | Published lesson options by question type, existing unavailable mappings, saving or clearing both defaults together |
 | `/admin/users` | `/api/admin/users` | Search by name or email, role and active-state filters, pagination, credit balances, account creation with any of the three roles, role changes and deactivation |
 
-The UI uses the backend API for these operations. The browser test suite supplies its own API fixtures. For manual testing, run the backend locally and sign in with a local test account.
+The UI uses the backend API for these operations. For manual testing, run the backend locally and sign in with a local test account.
 
 ## Run locally on Windows
 
@@ -206,13 +206,4 @@ Use disposable local content and accounts for these checks.
 
 ## Verification
 
-Run `npm run build`, `npm run lint` and `npm test` from the frontend directory. The test command uses Node.js with TypeScript type stripping (Node 22.18+).
-
-The browser suite uses Playwright from the local Node installation or the path provided in `BANDUP_TEST_PLAYWRIGHT`. Set `BANDUP_TEST_CHROME` to a local Chromium executable if Playwright's bundled browser is unavailable. Build the frontend with the loopback fixture origin, then run `npm run test:admin`. The suite starts Next.js on loopback and intercepts browser API calls. It requires no backend or database.
-
-```powershell
-$env:NEXT_PUBLIC_API_URL = 'http://127.0.0.1:3410'
-$env:NEXT_PUBLIC_USE_MOCK_API = 'false'
-npm run build
-npm run test:admin
-```
+Run `npm run build` and `npm run lint` from the frontend directory. To verify role access and content flows in the browser, follow [the manual checks above](#5-sign-in-and-test-the-panel-manually).
