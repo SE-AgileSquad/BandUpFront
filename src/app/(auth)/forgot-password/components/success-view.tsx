@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -14,22 +14,19 @@ export function SuccessView() {
     const router = useRouter();
     const ready = useForgotFlowReady();
     const handled = useRef(false);
-    const [maskedEmail, setMaskedEmail] = useState<string | null>(null);
+    const completed = useForgotFlow((state) => state.completed);
+    const maskedEmail = useForgotFlow((state) => state.completedMaskedEmail);
 
     useEffect(() => {
         if (!ready || handled.current) return;
         handled.current = true;
 
-        const { completed, completedMaskedEmail, reset } = useForgotFlow.getState();
-        if (!completed) {
+        if (!useForgotFlow.getState().completed) {
             router.replace(ROUTES.FORGOT_PASSWORD);
-            return;
         }
-        setMaskedEmail(completedMaskedEmail);
-        reset();
     }, [ready, router]);
 
-    if (maskedEmail === null) return <div aria-hidden className="min-h-[420px]" />;
+    if (!ready || !completed) return <div aria-hidden className="min-h-[420px]" />;
 
     const copy = FORGOT_COPY.success;
 
@@ -58,7 +55,12 @@ export function SuccessView() {
             />
 
             <Button asChild variant="gradient" size="default" className="w-full">
-                <Link href={ROUTES.LOGIN}>{copy.cta}</Link>
+                <Link
+                    href={ROUTES.LOGIN}
+                    onClick={() => useForgotFlow.getState().reset()}
+                >
+                    {copy.cta}
+                </Link>
             </Button>
         </>
     );
