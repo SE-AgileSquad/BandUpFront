@@ -48,13 +48,11 @@ export const useRegisterFlow = create<RegisterFlowState>()(
 );
 
 export function useRegisterFlowReady() {
-    const [ready, setReady] = useState(() =>
-        useRegisterFlow.persist.hasHydrated(),
-    );
+    const [ready, setReady] = useState(false);
 
     useEffect(() => {
         let active = true;
-        Promise.resolve(useRegisterFlow.persist.rehydrate()).then(() => {
+        Promise.resolve(useRegisterFlow.persist?.rehydrate()).then(() => {
             if (active) setReady(true);
         });
         return () => {

@@ -7,6 +7,7 @@ export const ROUTES = {
   LOGIN_VERIFY: "/login/verify",
   FORGOT_PASSWORD: "/forgot-password",
   DASHBOARD: "/dashboard",
+  ADMIN: "/admin",
   PRIVACY: "/privacy",
   TERMS: "/terms",
   CONTACT: "/contact",

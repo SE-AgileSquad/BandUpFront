@@ -35,7 +35,7 @@ NEXT_PUBLIC_TURNSTILE_SITE_KEY=
 
 Replace the API URL and site key with values for your environment. The URL above is only an example. If the backend is unavailable, the mock switches described below can help with supported flows. Restart the Next.js dev server after changing environment values.
 
-All four settings are read in `src/config/env.ts`:
+These settings are read in `src/config/env.ts`:
 
 | Variable | Purpose |
 | --- | --- |
@@ -43,6 +43,7 @@ All four settings are read in `src/config/env.ts`:
 | `NEXT_PUBLIC_USE_MOCK_API` | Set to the exact string `true` to use mocks for selected features that consult this switch, currently reading, credits, and logout. |
 | `NEXT_PUBLIC_MOCK_OTP` | Set to the exact string `true` to mock sending, verifying, and resending email codes in login and registration. |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Public Cloudflare Turnstile site key used by the captcha UI. Leave empty if not configured. |
+| `NEXT_PUBLIC_LOCAL_FAKE_CAPTCHA` | Set to `true` for a local backend configured with `Captcha:Provider=Fake`. In Next.js development mode, with both the browser and the configured API on loopback, the auth form shows **Verify for local testing**. |
 
 `NEXT_PUBLIC_` values are included in browser-side code. Treat them as public configuration: never put passwords, private API keys, or other secrets in them. `NEXT_PUBLIC_USE_MOCK_API` is not a global switch for every endpoint: password login, registration creation, and fetching the current user still call the real API. Check a feature's API selector before assuming it has a mock.
 

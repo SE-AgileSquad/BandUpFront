@@ -4,6 +4,7 @@ import { DASHBOARD_COPY, SIDEBAR_ITEMS } from "@/constants/dashboard-nav";
 import { CreditsCard } from "./credits-card";
 import { SidebarNavItem } from "./sidebar-nav-item";
 import { UserMenu } from "./user-menu";
+import { AdminNavLink } from "./admin-nav-link";
 
 export function Sidebar() {
     return (
@@ -18,6 +19,7 @@ export function Sidebar() {
                         </li>
                     ))}
                 </ul>
+                <AdminNavLink />
             </nav>
             <div className="flex-1" />
             <CreditsCard />

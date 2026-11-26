@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { ROUTES } from "@/constants/routes";
 import { cn } from "@/lib/utils";
+import { canAccessAdmin } from "@/lib/admin-access";
+import { Shield } from "lucide-react";
 
 type AuthActionsProps = {
     stacked?: boolean;
@@ -12,7 +14,7 @@ type AuthActionsProps = {
 };
 
 export function AuthActions({ stacked, onNavigate }: AuthActionsProps) {
-    const { isAuthenticated, isLoading } = useAuth();
+    const { isAuthenticated, isLoading, user } = useAuth();
     const fullWidth = stacked ? "w-full" : undefined;
 
     if (isLoading) {
@@ -29,11 +31,18 @@ export function AuthActions({ stacked, onNavigate }: AuthActionsProps) {
 
     if (isAuthenticated) {
         return (
-            <Button asChild variant="gradient" className={fullWidth}>
-                <Link href={ROUTES.DASHBOARD} onClick={onNavigate}>
-                    Go to dashboard
-                </Link>
-            </Button>
+            <div className={cn("flex gap-3", stacked ? "flex-col" : "items-center")}>
+                {canAccessAdmin(user?.role) && (
+                    <Button asChild variant="brand-outline" className={fullWidth}>
+                        <Link href={ROUTES.ADMIN} onClick={onNavigate}><Shield aria-hidden />Admin Panel</Link>
+                    </Button>
+                )}
+                <Button asChild variant="gradient" className={fullWidth}>
+                    <Link href={ROUTES.DASHBOARD} onClick={onNavigate}>
+                        Go to dashboard
+                    </Link>
+                </Button>
+            </div>
         );
     }
 
