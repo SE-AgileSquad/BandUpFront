@@ -128,7 +128,7 @@ export function CaptchaField({ value, onChange, error, ref }: CaptchaFieldProps)
                 message && "border-destructive",
             )}
         >
-            <div ref={containerRef} />
+            <div ref={containerRef} className="flex justify-center" />
             {message && (
                 <p role="alert" className="text-[12px] leading-[18px] text-destructive">
                     {message}
