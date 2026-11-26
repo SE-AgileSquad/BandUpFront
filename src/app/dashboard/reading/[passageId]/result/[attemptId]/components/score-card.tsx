@@ -13,7 +13,7 @@ export function ScoreCard({ result }: { result: ResultPayload }) {
     const ratio = result.total > 0 ? result.correct / result.total : 0;
     const accuracy = Math.round(ratio * 100);
     const illuminatedStars = result.correct >= 7 ? 3 : result.correct >= 4 ? 2 : 1;
-    const answered = result.breakdown.reduce((sum, item) => sum + item.total, 0);
+    const answered = result.answered ?? result.breakdown.reduce((sum, item) => sum + item.total, 0);
 
     return (
         <section
@@ -45,9 +45,9 @@ export function ScoreCard({ result }: { result: ResultPayload }) {
                 <p className="mt-1 text-[clamp(1rem,3vw,1.5rem)] leading-tight font-semibold">
                     {RESULT_COPY.band(result.band)}
                 </p>
-                <p className="mt-1 text-[11px] leading-4 text-muted-foreground sm:text-xs">
+                {result.band !== null && <p className="mt-1 text-[11px] leading-4 text-muted-foreground sm:text-xs">
                     {RESULT_COPY.disclaimer}
-                </p>
+                </p>}
             </div>
 
             <div className="absolute inset-x-[8%] bottom-[5%] grid grid-cols-3 rounded-pill border border-primary/10 bg-card/75 px-1 py-2 text-center shadow-sm backdrop-blur-sm sm:inset-x-[12%] sm:px-2 sm:py-2.5">

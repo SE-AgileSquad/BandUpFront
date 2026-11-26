@@ -22,7 +22,7 @@ export const READING_PATHS = {
 export const TFNG_OPTIONS: { value: TfngValue; label: string }[] = [
     { value: "TRUE", label: "True" },
     { value: "FALSE", label: "False" },
-    { value: "NOT_GIVEN", label: "Not Given" },
+    { value: "NOT GIVEN", label: "Not Given" },
 ];
 
 const plural = (n: number, one: string, many: string) => (n === 1 ? one : many);

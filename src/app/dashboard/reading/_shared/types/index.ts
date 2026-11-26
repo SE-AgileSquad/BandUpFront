@@ -1,6 +1,6 @@
 export type PassageStatus = "new" | "in_progress" | "completed";
 export type QuestionType = "tfng" | "completion";
-export type TfngValue = "TRUE" | "FALSE" | "NOT_GIVEN";
+export type TfngValue = "TRUE" | "FALSE" | "NOT GIVEN";
 export type SubmitReason = "manual" | "timeup";
 export type MobileTab = "passage" | "questions";
 export type DraftStatus = "in_progress" | "pending_submit";
@@ -43,7 +43,7 @@ export type Passage = {
 
 export type Answers = Record<string, string>;
 
-export type StartAttemptResponse = { attempt: Attempt; passage: Passage };
+export type StartAttemptResponse = { attempt: Attempt; passage: Passage; savedAnswers?: Answers };
 
 export type SubmitPayload = {
     answers: Answers;
@@ -61,8 +61,9 @@ export type ResultPayload = {
     title: string;
     correct: number;
     total: number;
-    headline: string;
-    band: number;
+    headline?: string;
+    band: number | null;
+    answered?: number;
     breakdown: BreakdownItem[];
     suggestedLesson?: { title: string; href: string };
     newParaphraseCount?: number;

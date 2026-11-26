@@ -172,6 +172,17 @@ On [the login page](http://localhost:3000/login/), use password sign-in. Enter t
 | Edit a draft Passage as an admin | Readiness lists the required changes. When all answers are verified, publication still requires the final review checkbox. |
 | Resize the browser to a mobile viewport | The admin navigation opens from the menu, and forms and user rows fit the viewport. |
 
+### Verify that saved content reaches the API
+
+Use disposable local content and accounts for these checks.
+
+| Feature | What to check |
+| --- | --- |
+| Reading | Publish a passage with at least one verified question. Sign in as a learner, open **Reading Tests**, and start it. The learner UI fetches text and questions with `GET /api/reading/passages/{passageId}` and starts the timer with `POST /api/attempts`. Answer a question and submit to verify the stored score on the result page. In development, keep both frontend and API on the same loopback hostname so the local submit rewrite can forward the session cookie and `Idempotency-Key` header. |
+| Writing Prompts | Create a prompt, publish it, then open the **Published** filter in Admin and refresh. In Swagger with an admin session, `GET /api/admin/writing-prompts/{promptId}` returns the saved Task 2 text and `status: "Published"`. The learner Writing screen has no prompt feed in this backend checkout. |
+| Lessons | Publish a lesson with a complete example. Check `GET /api/admin/lessons/{lessonId}` in Swagger, then sign in as a learner and check `GET /api/lessons/{lessonId}`. The learner Lessons screen is a placeholder. |
+| Lesson Mapping | Select a published lesson with the matching question type and save. Reload Admin Lesson Mapping, or check `GET /api/admin/lesson-mappings` for the selected ID and `isEnabled: true`. For an end-to-end backend check, submit a Reading attempt with a wrong answer of that type, then inspect `GET /api/attempts/{attemptId}/result`. Its matching question should include that ID as `relatedLessonId`. The Reading result UI does not render per-question lesson recommendations yet. |
+
 ### Troubleshooting
 
 | Symptom | What to check |

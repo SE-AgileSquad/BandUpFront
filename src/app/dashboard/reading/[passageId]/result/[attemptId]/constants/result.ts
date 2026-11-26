@@ -4,7 +4,7 @@ export const RESULT_COPY = {
     subtitle: "Here’s how you did in this reading session.",
     defaultHeadline: "Good effort!",
     mascotAlt: "BandUp mascot celebrating your reading result",
-    band: (band: number) => `Estimated band ${band.toFixed(1)}`,
+    band: (band: number | null) => band === null ? "Band estimate unavailable" : `Estimated band ${band.toFixed(1)}`,
     disclaimer: "Approximate IELTS estimate",
     breakdownTitle: "Your score breakdown",
     review: "Review answers",

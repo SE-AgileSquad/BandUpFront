@@ -11,7 +11,7 @@ export function PassagePanel({ passage }: { passage: Passage }) {
                 {passage.title}
             </h1>
             {passage.paragraphs.map((paragraph) => (
-                <p key={paragraph.label} className="text-[17px] leading-[28px] text-foreground">
+                <p key={paragraph.label} className="text-[17px] leading-[28px] whitespace-pre-wrap text-foreground">
                     <span className="font-semibold">{paragraph.label}.</span> {paragraph.text}
                 </p>
             ))}

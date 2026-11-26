@@ -102,9 +102,15 @@ export function useTestSession(passageId: string) {
         }
 
         startAttempt(passageId)
-            .then(({ attempt, passage }) => {
+            .then(({ attempt, passage, savedAnswers }) => {
                 const restorable = existing && existing.attemptId === attempt.id ? existing : null;
                 const lastIndex = passage.questions.length - 1;
+                const answers = { ...(restorable?.answers ?? savedAnswers) };
+                for (const question of passage.questions) {
+                    if (question.type === "tfng" && answers[question.id] === "NOT_GIVEN") {
+                        answers[question.id] = "NOT GIVEN";
+                    }
+                }
 
                 const draft = draftStore.save(userId, {
                     passageId,
@@ -112,7 +118,7 @@ export function useTestSession(passageId: string) {
                     startedAt: attempt.startedAt,
                     endsAt: attempt.endsAt,
                     serverOffsetMs: computeOffset(attempt.serverNow),
-                    answers: restorable?.answers ?? {},
+                    answers,
                     currentIndex: restorable
                         ? Math.min(Math.max(restorable.currentIndex, 0), lastIndex)
                         : 0,

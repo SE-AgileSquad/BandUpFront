@@ -30,11 +30,11 @@ export const STATEMENTS: { prompt: string; answer: TfngValue }[] = [
     { prompt: "City colonies can find nectar close to their hives.", answer: "TRUE" },
     { prompt: "Farmland always produces more honey than city hives.", answer: "FALSE" },
     { prompt: "Scientists have proved that city honey is unsafe to eat.", answer: "FALSE" },
-    { prompt: "All cities ban hives within a set distance of schools.", answer: "NOT_GIVEN" },
+    { prompt: "All cities ban hives within a set distance of schools.", answer: "NOT GIVEN" },
     { prompt: "Some cities restrict how many hives may be kept on one street.", answer: "TRUE" },
     { prompt: "Too many honeybee hives may harm wild pollinators.", answer: "TRUE" },
     { prompt: "Conservation groups recommend adding more hives to city rooftops.", answer: "FALSE" },
-    { prompt: "Hives in schools have reduced the number of swarms.", answer: "NOT_GIVEN" },
+    { prompt: "Hives in schools have reduced the number of swarms.", answer: "NOT GIVEN" },
     { prompt: "Beginners are advised to help at an established apiary before buying bees.", answer: "TRUE" },
 ];
 
@@ -81,12 +81,13 @@ export function scoreAnswers(
     const groups: Record<TfngValue, { correct: number; total: number }> = {
         TRUE: { correct: 0, total: 0 },
         FALSE: { correct: 0, total: 0 },
-        NOT_GIVEN: { correct: 0, total: 0 },
+        "NOT GIVEN": { correct: 0, total: 0 },
     };
     let correct = 0;
 
     STATEMENTS.forEach((statement, index) => {
-        const given = (answers[`q${index + 1}`] ?? "").trim().toUpperCase();
+        const stored = (answers[`q${index + 1}`] ?? "").trim().toUpperCase();
+        const given = stored === "NOT_GIVEN" ? "NOT GIVEN" : stored;
         groups[statement.answer].total += 1;
         if (given === statement.answer) {
             correct += 1;
@@ -105,10 +106,11 @@ export function scoreAnswers(
         total,
         headline: headlineFor(correct, total),
         band: BAND_BY_SCORE[Math.min(correct, 10)],
+        answered: STATEMENTS.filter((_, index) => answers[`q${index + 1}`]?.trim()).length,
         breakdown: [
             { label: "True statements", ...groups.TRUE },
             { label: "False statements", ...groups.FALSE },
-            { label: "Not Given statements", ...groups.NOT_GIVEN },
+            { label: "Not Given statements", ...groups["NOT GIVEN"] },
         ],
         suggestedLesson:
             wrong > 0
