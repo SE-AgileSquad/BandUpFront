@@ -37,7 +37,7 @@ export function WelcomePanel({
     mascot = AUTH_PANEL.mascot,
 }: WelcomePanelProps) {
     return (
-        <aside className="hidden w-[600px] shrink-0 flex-col justify-between rounded-r-[48px] bg-gradient-primary px-14 py-12 text-primary-foreground lg:flex">
+        <aside className="hidden w-[600px] shrink-0 flex-col justify-between rounded-r-[48px] bg-gradient-primary px-14 py-12 text-primary-foreground motion-safe:lg:[animation:auth-panel-enter_700ms_cubic-bezier(0.22,1,0.36,1)_both] lg:flex">
             <LogoAlt />
             <div className="flex flex-col items-center gap-[14px]">
                 <p className="max-w-[488px] text-auth-heading">{headline}</p>
