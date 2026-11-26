@@ -11,6 +11,9 @@ export const ROUTES = {
   PRIVACY: "/privacy",
   TERMS: "/terms",
   CONTACT: "/contact",
+  FORGOT_PASSWORD_NEW: "/forgot-password/new-password",
+  FORGOT_PASSWORD_VERIFY: "/forgot-password/verify",
+  FORGOT_PASSWORD_SUCCESS: "/forgot-password/success",
 } as const;
 
 export const DASHBOARD_ROUTES = {
