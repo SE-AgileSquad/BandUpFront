@@ -12,7 +12,7 @@ import { useUnsavedChanges } from "../_lib/use-unsaved";
 export default function MappingPage() {
   const query = useAdminQuery<Mapping[]>("lesson-mappings");
   return <>
-    <Heading title="Lesson mapping" description="Choose the default lesson recommended after each type of Reading mistake." />
+    <Heading title="Lesson mapping" description="Choose the default lesson recommended after each type of Reading mistake." art="mapping" />
     {query.isPending ? <Pending label="Loading lesson mappings…" /> : query.isError ?
       <QueryError error={query.error} retry={() => void query.refetch()} /> :
       query.data.length ? <MappingForm rows={query.data} /> :

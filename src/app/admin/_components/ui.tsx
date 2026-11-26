@@ -1,26 +1,28 @@
 "use client";
 
 import { useId, useState, type FormEvent, type ReactNode } from "react";
-import { ArrowLeft, ChevronLeft, ChevronRight, CircleAlert, Inbox, LoaderCircle } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, CircleAlert, LoaderCircle } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { errorFields, errorMessage } from "../_lib/api";
 import type { Page, Readiness, Status } from "../_lib/contracts";
+import { AdminArt, type AdminArtName } from "./admin-art";
 
-export function Heading({ title, description, action, back }: {
-  title: string; description?: string; action?: ReactNode; back?: { href: string; label: string };
+export function Heading({ title, description, action, back, art }: {
+  title: string; description?: string; action?: ReactNode; back?: { href: string; label: string }; art?: AdminArtName;
 }) {
   return (
-    <header className="space-y-3">
+    <header className={cn("space-y-3", art && "overflow-hidden rounded-card border bg-linear-to-br from-card via-card to-primary-soft p-4 sm:p-6")}>
       {back && <Link href={back.href} className="inline-flex items-center gap-2 rounded-sm text-sm font-medium text-accent-foreground hover:underline"><ArrowLeft aria-hidden className="size-4" />{back.label}</Link>}
-      <div className="flex flex-wrap items-start justify-between gap-4">
+      <div className={cn("gap-3", art ? "grid grid-cols-[minmax(0,1fr)_4.75rem] items-center sm:grid-cols-[minmax(0,1fr)_8rem] sm:gap-6" : "flex flex-wrap items-start justify-between")}>
         <div className="min-w-0 space-y-2">
-          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{title}</h1>
+          <h1 className="text-3xl font-bold tracking-tight wrap-break-word sm:text-4xl">{title}</h1>
           {description && <p className="text-sm leading-6 text-muted-foreground sm:text-base">{description}</p>}
+          {art && action && <div className="pt-1">{action}</div>}
         </div>
-        {action}
+        {art ? <AdminArt name={art} sizes="(min-width: 640px) 128px, 76px" className="aspect-square w-full drop-shadow-md" /> : action}
       </div>
     </header>
   );
@@ -44,7 +46,14 @@ export function Pending({ label = "Loading…" }: { label?: string }) {
 }
 
 export function Empty({ title, description, action }: { title: string; description?: string; action?: ReactNode }) {
-  return <Panel className="grid justify-items-center gap-3 py-10 text-center"><Inbox aria-hidden className="size-7 text-primary" /><h2 className="font-semibold">{title}</h2>{description && <p className="text-sm text-muted-foreground">{description}</p>}{action}</Panel>;
+  return (
+    <Panel className="grid justify-items-center gap-3 py-8 text-center sm:py-10">
+      <AdminArt name="empty" sizes="96px" className="h-20 w-24" />
+      <h2 className="font-semibold">{title}</h2>
+      {description && <p className="text-sm text-muted-foreground">{description}</p>}
+      {action}
+    </Panel>
+  );
 }
 
 export function ErrorNotice({ error, omitFields = [] }: { error: unknown; omitFields?: string[] }) {

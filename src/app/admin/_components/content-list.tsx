@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { ArrowRight, Plus, Search } from "lucide-react";
+import { ArrowRight, BookOpen, GraduationCap, PenLine, Plus, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAdminQuery } from "../_lib/api";
 import { questionLabels, questionTypes, statuses, type LessonSummary, type Page, type PassageSummary, type PromptSummary } from "../_lib/contracts";
@@ -13,10 +12,10 @@ type Kind = "passages" | "lessons" | "prompts";
 type Item = PassageSummary | LessonSummary | PromptSummary;
 
 const settings = {
-  passages: { title: "Passages", noun: "passage", path: "passages", description: "Manage Academic Reading passages, questions and answer verification.", art: "books", width: 173, height: 162 },
-  lessons: { title: "Lessons", noun: "lesson", path: "lessons", description: "Manage Reading lessons and their evidence and paraphrase examples.", art: "lesson", width: 64, height: 72 },
-  prompts: { title: "Writing Prompts", noun: "prompt", path: "writing-prompts", description: "Manage Task 2 essay prompts and their word limits.", art: "prompt", width: 92, height: 54 },
-};
+  passages: { title: "Passages", noun: "passage", path: "passages", description: "Manage Academic Reading passages, questions and answer verification.", art: "passages", Icon: BookOpen },
+  lessons: { title: "Lessons", noun: "lesson", path: "lessons", description: "Manage Reading lessons and their evidence and paraphrase examples.", art: "lessons", Icon: GraduationCap },
+  prompts: { title: "Writing Prompts", noun: "prompt", path: "writing-prompts", description: "Manage Task 2 essay prompts and their word limits.", art: "writing", Icon: PenLine },
+} as const;
 
 const options = [{ value: "", label: "All" }, ...statuses.map((status) => ({ value: status, label: status }))];
 
@@ -54,7 +53,7 @@ export function ContentList({ kind, initialStatus = "" }: { kind: Kind; initialS
   const newLink = <Button asChild className="h-11 rounded-xl bg-[#6341e8] font-semibold"><Link href={`${base}/new`}><Plus aria-hidden />New {config.noun}</Link></Button>;
 
   return <>
-    <Heading title={config.title} description={config.description} action={newLink} />
+    <Heading title={config.title} description={config.description} action={newLink} art={config.art} />
     <Panel className="space-y-4">
       <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
         <SearchField label={`Search ${config.title.toLowerCase()}`} placeholder="Search by title…" value={input} onChange={(value) => { setInput(value); setPosition({ page: 1, search }); }} />
@@ -70,7 +69,10 @@ export function ContentList({ kind, initialStatus = "" }: { kind: Kind; initialS
       result.isError ? <QueryError error={result.error} retry={() => void result.refetch()} /> :
       <>
         {result.data.items.length ? <ul className="grid gap-4" aria-label={config.title}>
-          {result.data.items.map((item) => <li key={item.id}><Panel className="flex items-center gap-4 sm:gap-8">
+          {result.data.items.map((item) => <li key={item.id}><Panel className="flex items-start gap-4 sm:gap-5">
+            <div aria-hidden className="hidden size-12 shrink-0 place-items-center rounded-xl bg-primary-soft text-primary sm:grid">
+              <config.Icon className="size-5" />
+            </div>
             <div className="min-w-0 flex-1 space-y-2">
               <StatusPill status={item.status} />
               <h2 className="text-xl font-semibold break-words">{item.title}</h2>
@@ -80,9 +82,6 @@ export function ContentList({ kind, initialStatus = "" }: { kind: Kind; initialS
                   {item.status === "Draft" ? "Edit draft" : "View details"}<ArrowRight aria-hidden />
                 </Link>
               </Button>
-            </div>
-            <div className="hidden w-24 shrink-0 justify-center sm:flex">
-              <Image src={`/images/admin/${config.art}.png`} alt="" width={config.width} height={config.height} className="h-auto max-h-22 w-auto max-w-full object-contain" />
             </div>
           </Panel></li>)}
         </ul> : <Empty title={`No ${config.title.toLowerCase()} found`}

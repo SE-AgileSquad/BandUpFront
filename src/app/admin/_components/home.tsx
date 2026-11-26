@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, BookOpen, FileText, GraduationCap, Network, PenLine, Plus, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,6 +7,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { canAccessAdmin, roleLabel } from "@/lib/admin-access";
 import { useAdminQuery } from "../_lib/api";
 import type { Dashboard } from "../_lib/contracts";
+import { AdminArt } from "./admin-art";
 import { Heading, Panel, Pending, Pill, QueryError } from "./ui";
 
 const stats = [
@@ -38,14 +38,17 @@ export function AdminHome() {
         })}
       </ul>
     )}
-    <Panel className="relative isolate flex items-center justify-between gap-4 overflow-hidden bg-linear-to-br from-card to-primary-soft">
-      <div className="relative z-10 grid justify-items-start gap-3">
+    <Panel className="grid grid-cols-[minmax(0,1fr)_5.75rem] items-center gap-x-3 gap-y-4 overflow-hidden bg-linear-to-br from-card via-card to-primary-soft sm:grid-cols-[minmax(0,1fr)_12rem] sm:gap-x-7 lg:grid-cols-[minmax(0,1fr)_17rem]">
+      <div className="grid min-w-0 justify-items-start gap-3 self-end">
         {!!counts.data?.draftPassages && <Pill tone="warning">{counts.data.draftPassages} {counts.data.draftPassages === 1 ? "draft needs" : "drafts need"} review</Pill>}
         <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Review Reading passages</h2>
         <p className="max-w-xl text-sm leading-6 text-muted-foreground">Check answer keys and explanations before publishing passages for learners.</p>
-        <Button asChild className="mt-1 h-11 rounded-xl bg-[#6341e8]"><Link href="/admin/passages?status=Draft">Review draft passages<ArrowRight aria-hidden /></Link></Button>
       </div>
-      <Image src="/images/admin/books.png" width={176} height={165} alt="" className="mr-3 hidden h-auto w-32 shrink-0 drop-shadow-lg sm:block lg:w-40" />
+      <AdminArt name="overview" sizes="(min-width: 1024px) 272px, (min-width: 640px) 192px, 92px"
+        className="col-start-2 row-start-1 aspect-square w-full mask-intersect mask-x-from-90% mask-y-from-90% drop-shadow-lg sm:row-span-2 sm:aspect-[4/3]" />
+      <div className="col-span-2 self-start sm:col-span-1">
+        <Button asChild className="h-11 rounded-xl bg-[#6341e8]"><Link href="/admin/passages?status=Draft">Review draft passages<ArrowRight aria-hidden /></Link></Button>
+      </div>
     </Panel>
     <Panel className="space-y-4">
       <h2 className="text-xl font-semibold">Quick actions</h2>

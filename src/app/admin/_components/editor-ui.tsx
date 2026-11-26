@@ -5,17 +5,24 @@ import { Button } from "@/components/ui/button";
 import { ErrorNotice, Heading, Panel, Pending, QueryError, StatusPill } from "./ui";
 import type { Status } from "../_lib/contracts";
 
+const editorArt = {
+  passage: "passages",
+  lesson: "lessons",
+  prompt: "writing",
+  "writing prompt": "writing",
+} as const;
+
 export function EditorHeading({ resource, back, title, status, children }: {
-  resource: string; back: { href: string; label: string }; title?: string; status?: Status; children?: ReactNode;
+  resource: keyof typeof editorArt; back: { href: string; label: string }; title?: string; status?: Status; children?: ReactNode;
 }) {
   return <>
-    <Heading title={title ?? `New ${resource}`} back={back} action={status && <StatusPill status={status} />} />
+    <Heading title={title ?? `New ${resource}`} back={back} action={status && <StatusPill status={status} />} art={editorArt[resource]} />
     {children}
   </>;
 }
 
 export function EditorLoading({ resource, back, error, retry }: {
-  resource: string; back: { href: string; label: string }; error: unknown; retry: () => void;
+  resource: keyof typeof editorArt; back: { href: string; label: string }; error: unknown; retry: () => void;
 }) {
   return <>
     <EditorHeading title={`View ${resource}`} resource={resource} back={back} />

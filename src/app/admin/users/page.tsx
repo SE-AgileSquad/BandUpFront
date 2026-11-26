@@ -25,7 +25,7 @@ export default function UsersPage() {
   const query = useAdminQuery<Page<AdminUser>>("users", { page, pageSize: 4, role: role || undefined, search: search || undefined, isActive: accountState === "active" });
   const goToPage = (page: number) => setPosition({ page, search });
   return <>
-    <Heading title="Users" description="Manage accounts, roles and access to BandUp." action={<AccountDialog />} />
+    <Heading title="Users" description="Manage accounts, roles and access to BandUp." action={<AccountDialog />} art="users" />
     <Panel className="space-y-4">
       <SearchField label="Search users" placeholder="Search by name or email…" value={input} onChange={(value) => { setInput(value); goToPage(1); }} />
       <div className="flex flex-wrap justify-between gap-3">
