@@ -2,7 +2,6 @@
 
 import { ReadingDialog } from "@/app/dashboard/reading/_shared/components/reading-dialog";
 import { formatClockFromMs } from "@/app/dashboard/reading/_shared/lib/format-time";
-import { ImageSlot } from "@/components/shared/image-slot";
 import { Button } from "@/components/ui/button";
 import { LIST_COPY } from "../constants/list";
 import type { ListItem } from "../hooks/use-list-items";
@@ -42,9 +41,6 @@ export function ResumeDialog({ item, onConfirm, onClose }: ResumeDialogProps) {
                 </>
             }
         >
-            <div className="relative mx-auto size-24">
-                <ImageSlot src={undefined} alt={copy.imageAlt} sizes="96px" className="rounded-frame" />
-            </div>
             {item && state && (
                 <p className="text-[13.5px] leading-[1.6] font-semibold text-foreground">
                     {copy.line(item.passage.title, state.questionNumber)}

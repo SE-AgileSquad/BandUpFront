@@ -10,6 +10,7 @@ import { ListEmpty } from "./list-empty";
 import { ListFilters } from "./list-filters";
 import { ListSkeleton } from "./list-skeleton";
 import { PassageCard } from "./passage-card";
+import { CompletedTestDialog } from "./completed-test-dialog";
 import { ResumeDialog } from "./resume-dialog";
 import { StartDialog } from "./start-dialog";
 
@@ -30,6 +31,7 @@ export function ReadingListView() {
     const [filter, setFilter] = useState<FilterKey>("all");
     const [startItem, setStartItem] = useState<ListItem | null>(null);
     const [resumeItem, setResumeItem] = useState<ListItem | null>(null);
+    const [completedItem, setCompletedItem] = useState<ListItem | null>(null);
 
     function handleSelect(item: ListItem) {
         switch (item.state.kind) {
@@ -40,7 +42,7 @@ export function ReadingListView() {
                 setResumeItem(item);
                 break;
             case "completed":
-                if (item.state.href) router.push(item.state.href);
+                setCompletedItem(item);
                 break;
         }
     }
@@ -68,7 +70,11 @@ export function ReadingListView() {
             ) : (
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
                     {visible.map((item) => (
-                        <PassageCard key={item.passage.id} item={item} onSelect={handleSelect} />
+                        <PassageCard
+                            key={item.passage.id}
+                            item={item}
+                            onSelect={handleSelect}
+                        />
                     ))}
                 </div>
             )}
@@ -85,6 +91,18 @@ export function ReadingListView() {
                 onClose={() => setResumeItem(null)}
                 onConfirm={() => {
                     if (resumeItem) router.push(READING_PATHS.test(resumeItem.passage.id));
+                }}
+            />
+            <CompletedTestDialog
+                item={completedItem}
+                onClose={() => setCompletedItem(null)}
+                onRetake={() => {
+                    if (completedItem) router.push(READING_PATHS.test(completedItem.passage.id));
+                }}
+                onReview={() => {
+                    if (completedItem?.state.kind === "completed" && completedItem.state.href) {
+                        router.push(completedItem.state.href);
+                    }
                 }}
             />
         </>

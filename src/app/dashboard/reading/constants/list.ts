@@ -24,7 +24,13 @@ export const LIST_COPY = {
     actions: {
         new: "Start",
         in_progress: "Continue",
-        completed: "Review",
+        completed: "View options",
+    },
+    completedDialog: {
+        title: "Test completed",
+        description: (title: string) => `What would you like to do with ${title}?`,
+        retake: "Retake test",
+        review: "Review last attempt",
     },
     empty: {
         title: "No tests here yet",
@@ -52,7 +58,6 @@ export const LIST_COPY = {
             }. Continue the same test from where you left off.`,
         line: (title: string, questionNumber: number | null) =>
             questionNumber ? `${title} · Question ${questionNumber}` : title,
-        imageAlt: "BandUp mascot",
         confirm: "Continue",
         cancel: "Cancel",
     },
