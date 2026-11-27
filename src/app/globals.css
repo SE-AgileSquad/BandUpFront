@@ -3,6 +3,11 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+
 :root {
   --background: #f6f4ff;
   --foreground: #1b1636;
