@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { OtpVerification } from "@/components/auth/otp-verification";
+import { CaptchaField } from "@/components/auth/captcha-field";
 import { useAutoContinue } from "@/hooks/use-auto-continue";
 import { useOtpChallenge } from "@/hooks/use-otp-challenge";
 import { ROUTES } from "@/constants/routes";
-import { authKeys } from "@/lib/auth-api";
+import { authKeys, fetchMe } from "@/lib/auth-api";
 import type { AuthUser } from "@/types/auth";
 import { withParams } from "@/lib/safe-redirect";
 import type { OtpChallenge } from "@/types/auth";
@@ -35,6 +36,8 @@ function VerifyContent({ challenge, next, onLeave }: VerifyContentProps) {
     const queryClient = useQueryClient();
     const verify = useVerifyLoginCodeMutation();
     const resend = useResendLoginCodeMutation();
+    const email = useLoginFlow((flow) => flow.email);
+    const [resendCaptchaToken, setResendCaptchaToken] = useState<string | null>(null);
     const { updateTimers, setLockedUntil } = useLoginFlow.getState();
 
     const hasResume = next !== null && readResumeInfo(next) !== null;
@@ -42,17 +45,29 @@ function VerifyContent({ challenge, next, onLeave }: VerifyContentProps) {
 
     const otp = useOtpChallenge({
         challenge,
-        verifyFn: (code) =>
-            verify.mutateAsync({ verificationId: challenge.verificationId, code }),
-        resendFn: () =>
-            resend.mutateAsync({ verificationId: challenge.verificationId }),
+        verifyFn: async (code) => {
+            await verify.mutateAsync({ email, code });
+            const user = await fetchMe();
+            if (!user) throw new Error("Signed-in account could not be loaded.");
+            return user;
+        },
+        resendFn: async () => {
+            try {
+                return await resend.mutateAsync({
+                    email,
+                    captchaToken: resendCaptchaToken ?? "",
+                });
+            } finally {
+                setResendCaptchaToken(null);
+            }
+        },
         messages: MESSAGES,
         onLocked: setLockedUntil,
         onTimers: updateTimers,
         onSuccess: (result) =>
             queryClient.setQueryData(
                 authKeys.me,
-                (result as { user: AuthUser }).user,
+                result as AuthUser,
             ),
     });
 
@@ -71,6 +86,13 @@ function VerifyContent({ challenge, next, onLeave }: VerifyContentProps) {
             isVerifying={otp.isVerifying}
             isResending={otp.isResending}
             notice={otp.notice}
+            resendReady={Boolean(resendCaptchaToken)}
+            resendControl={
+                <CaptchaField
+                    value={resendCaptchaToken}
+                    onChange={setResendCaptchaToken}
+                />
+            }
             changeNumberHref={withParams(ROUTES.LOGIN, { method: "email", next })}
             onVerify={otp.verify}
             onResend={otp.resend}

@@ -24,6 +24,15 @@ const refreshClient = axios.create({
 type RetriableRequestConfig = InternalAxiosRequestConfig & { _authRetry?: boolean };
 
 let refreshInFlight: Promise<void> | null = null;
+let manualLogoutInProgress = false;
+
+export function markManualLogout() {
+  manualLogoutInProgress = true;
+}
+
+export function resetManualLogout() {
+  manualLogoutInProgress = false;
+}
 
 function refreshSession() {
   if (!refreshInFlight) {
@@ -39,11 +48,11 @@ function refreshSession() {
 }
 
 function isAuthFlowRequest(url = "") {
-  return /\/(?:api\/)?auth\/(login|register)(\/|$)/.test(url) || /\/(?:api\/)?auth\/(refresh|logout)(\/|$)/.test(url);
+  return /\/(?:api\/)?auth\/(login|register|otp\/request|otp\/verify)(\/|$)/.test(url) || /\/(?:api\/)?auth\/(refresh|logout)(\/|$)/.test(url);
 }
 
 function redirectToLogin() {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined" || manualLogoutInProgress) return;
   const { pathname, search } = window.location;
   if (
     pathname === ROUTES.LOGIN ||
@@ -80,11 +89,14 @@ function toApiError(error: AxiosError<{ message?: string; code?: string; detail?
 }
 
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    if (/\/auth\/(?:login|otp\/verify)(?:\/|$)/.test(response.config.url ?? "")) resetManualLogout();
+    return response;
+  },
   async (error: AxiosError<{ message?: string; code?: string; detail?: string; title?: string }>) => {
     const config = error.config as RetriableRequestConfig | undefined;
 
-    if (error.response?.status === 401 && config && !isAuthFlowRequest(config.url)) {
+    if (error.response?.status === 401 && config && !isAuthFlowRequest(config.url) && !manualLogoutInProgress) {
       if (config._authRetry) {
         redirectToLogin();
       } else {

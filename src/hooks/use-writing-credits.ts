@@ -1,15 +1,13 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { fetchCredits } from "@/lib/api/credits.api";
-
-export const creditsKeys = { writing: ["me", "credits"] as const };
+import { authKeys, fetchMe } from "@/lib/auth-api";
 
 export function useWritingCredits() {
     return useQuery({
-        queryKey: creditsKeys.writing,
-        queryFn: fetchCredits,
-        select: (data) => data.writing,
+        queryKey: authKeys.me,
+        queryFn: fetchMe,
+        select: (user) => user?.creditBalance ?? null,
         staleTime: 60 * 1000,
     });
 }

@@ -14,17 +14,17 @@ export type SendCodePayload = { email: string; captchaToken: string };
 export type SendCodeResponse = {
   verificationId: string;
   maskedEmail: string;
-  codeLength: 5;
+  codeLength: 6;
   expiresAt: string;
   resendAvailableAt: string;
 };
 
 export type LoginResponse = AuthUser;
 
-export type VerifyCodePayload = { verificationId: string; code: string };
-export type VerifyCodeResponse = { user: AuthUser };
+export type VerifyCodePayload = { email: string; code: string };
+export type VerifyCodeResponse = AuthUser;
 
-export type ResendCodePayload = { verificationId: string };
+export type ResendCodePayload = SendCodePayload;
 export type ResendCodeResponse = { expiresAt: string; resendAvailableAt: string };
 
 export type LoginErrorCode =

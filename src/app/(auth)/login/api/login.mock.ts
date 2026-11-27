@@ -63,21 +63,21 @@ export const loginApi: LoginApi = {
     async sendCode({ email }) {
         await delay();
         const verificationId = `mock-login-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-        challenges.set(verificationId, { email, wrongAttempts: 0, lockedUntil: null });
+        challenges.set(email, { email, wrongAttempts: 0, lockedUntil: null });
 
         const now = Date.now();
         return {
             verificationId,
             maskedEmail: maskEmail(email),
-            codeLength: 5,
+            codeLength: LOGIN_LIMITS.codeLength,
             expiresAt: iso(now + LOGIN_LIMITS.codeTtlMs),
             resendAvailableAt: iso(now + LOGIN_LIMITS.resendCooldownMs),
         };
     },
 
-    async verifyCode({ verificationId, code }) {
+    async verifyCode({ email, code }) {
         await delay();
-        const entry = getChallenge(verificationId);
+        const entry = getChallenge(email);
 
         if (entry.lockedUntil && entry.lockedUntil > Date.now()) {
             fail(429, "TOO_MANY_ATTEMPTS", { lockedUntil: iso(entry.lockedUntil) });
@@ -86,7 +86,7 @@ export const loginApi: LoginApi = {
         if (code === MOCK_VALID_CODE) {
             const user = mockUser(entry.email);
             mockSession.set(user);
-            return { user };
+            return user;
         }
 
         if (code === MOCK_EXPIRED_CODE) fail(410, "CODE_EXPIRED");
@@ -102,9 +102,9 @@ export const loginApi: LoginApi = {
         });
     },
 
-    async resendCode({ verificationId }) {
+    async resendCode({ email }) {
         await delay();
-        const entry = getChallenge(verificationId);
+        const entry = getChallenge(email);
         entry.wrongAttempts = 0;
         entry.lockedUntil = null;
 

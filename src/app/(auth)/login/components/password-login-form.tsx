@@ -13,7 +13,7 @@ import { FieldInput, FormField } from "@/components/auth/form-field";
 import { PasswordInput } from "@/components/auth/password-input";
 import { StatusNotice } from "@/components/auth/status-notice";
 import { ROUTES } from "@/constants/routes";
-import { authKeys } from "@/lib/auth-api";
+import { authKeys, fetchMe } from "@/lib/auth-api";
 import { normalizeEmail } from "@/lib/email";
 import { ApiError } from "@/types/api";
 import { useLoginMutation } from "../api/login.queries";
@@ -72,11 +72,13 @@ export function PasswordLoginForm({ next }: { next: string | null }) {
         }
 
         try {
-            const user = await mutation.mutateAsync({
+            await mutation.mutateAsync({
                 email,
                 password: values.password,
                 captchaToken: values.captchaToken ?? "",
             });
+            const user = await fetchMe();
+            if (!user) throw new Error("Signed-in account could not be loaded.");
             queryClient.setQueryData(authKeys.me, user);
             useLoginFlow.getState().reset();
             router.replace(next ?? ROUTES.DASHBOARD);

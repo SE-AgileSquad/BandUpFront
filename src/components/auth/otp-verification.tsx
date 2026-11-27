@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCountdown } from "@/hooks/use-countdown";
@@ -22,6 +23,8 @@ type OtpVerificationProps = {
     isVerifying: boolean;
     isResending: boolean;
     notice?: OtpNotice | null;
+    resendControl?: ReactNode;
+    resendReady?: boolean;
     changeNumberHref: string;
     changeLabel?: string;
     onChangeTarget?: () => void;
@@ -49,8 +52,10 @@ export function OtpVerification({
     isVerifying,
     isResending,
     notice,
+    resendControl,
+    resendReady = true,
     changeNumberHref,
-    changeLabel = "Change number",
+    changeLabel = "Change Email",
     onChangeTarget,
     onVerify,
     onResend,
@@ -104,7 +109,8 @@ export function OtpVerification({
         !locked &&
         !expired &&
         !success;
-    const canResend = !isResending && !locked && (expired || resend.isDone);
+    const canAttemptResend = !isResending && !locked && (expired || resend.isDone);
+    const canResend = canAttemptResend && resendReady;
 
     function handleChange(next: string) {
         setCode(next);
@@ -233,6 +239,8 @@ export function OtpVerification({
                         {isVerifying && <Loader2 aria-hidden className="size-5 animate-spin" />}
                         Verify code
                     </Button>
+
+                    {resendControl && canAttemptResend && resendControl}
 
                     <Button
                         type="button"
