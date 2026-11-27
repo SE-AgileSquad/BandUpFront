@@ -74,7 +74,7 @@ export function TestScreen({ passageId }: { passageId: string }) {
             </div>
             <MobileTabs value={tab} onChange={session.setTab} />
 
-            <main className="px-4 py-7 lg:py-5 lg:pl-10 lg:pr-[480px]">
+            <main className="px-4 pt-3 pb-7 lg:pt-0 lg:pb-5 lg:pl-10 lg:pr-[480px]">
                 <div className="flex flex-col gap-5 lg:flex-row">
                     <div
                         id={PANEL_IDS.passage}

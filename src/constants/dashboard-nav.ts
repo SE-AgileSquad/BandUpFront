@@ -77,7 +77,7 @@ export const DASHBOARD_COPY = {
         unavailable: "Credits unavailable",
         none: "No free checks left",
         remaining: (count: number) =>
-            count === 1 ? "1 free check left" : `${count} free checks left`,
+            count === 1 ? "1 Credit left" : `${count} Credits left`,
     },
     userMenu: {
         label: "Account menu",
