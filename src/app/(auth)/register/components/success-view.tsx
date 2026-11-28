@@ -40,9 +40,9 @@ export function SuccessView() {
             return;
         }
         queryClient.setQueryData(authKeys.me, flow.session.user);
-        setAllowed(true);
+        queueMicrotask(() => setAllowed(true));
         flow.reset();
-    }, [ready, router]);
+    }, [queryClient, ready, router]);
 
     useAutoContinue(allowed, async () => {
         router.replace(ROUTES.DASHBOARD);
