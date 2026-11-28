@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCountdown } from "@/hooks/use-countdown";
@@ -22,7 +23,11 @@ type OtpVerificationProps = {
     isVerifying: boolean;
     isResending: boolean;
     notice?: OtpNotice | null;
+    resendControl?: ReactNode;
+    resendReady?: boolean;
     changeNumberHref: string;
+    changeLabel?: string;
+    onChangeTarget?: () => void;
     onVerify: (code: string) => void | Promise<void>;
     onResend: () => Promise<boolean>;
     successTitle?: string;
@@ -47,7 +52,11 @@ export function OtpVerification({
     isVerifying,
     isResending,
     notice,
+    resendControl,
+    resendReady = true,
     changeNumberHref,
+    changeLabel = "Change Email",
+    onChangeTarget,
     onVerify,
     onResend,
     successTitle,
@@ -100,7 +109,8 @@ export function OtpVerification({
         !locked &&
         !expired &&
         !success;
-    const canResend = !isResending && !locked && (expired || resend.isDone);
+    const canAttemptResend = !isResending && !locked && (expired || resend.isDone);
+    const canResend = canAttemptResend && resendReady;
 
     function handleChange(next: string) {
         setCode(next);
@@ -172,8 +182,11 @@ export function OtpVerification({
                 <StatusNotice
                     variant="error"
                     title="That code isn’t right"
-                    description={`Check the five digits and try again. ${effective.attemptsRemaining} ${effective.attemptsRemaining === 1 ? "attempt" : "attempts"
-                        } remaining.`}
+                    description={
+                        effective.attemptsRemaining === undefined
+                            ? `Check all ${codeLength} digits and try again.`
+                            : `Check all ${codeLength} digits and try again. ${effective.attemptsRemaining} ${effective.attemptsRemaining === 1 ? "attempt" : "attempts"} remaining.`
+                    }
                 />
             )}
             {expired && (
@@ -227,6 +240,8 @@ export function OtpVerification({
                         Verify code
                     </Button>
 
+                    {resendControl && canAttemptResend && resendControl}
+
                     <Button
                         type="button"
                         variant="brand-outline"
@@ -241,9 +256,10 @@ export function OtpVerification({
 
                     <Link
                         href={changeNumberHref}
+                        onClick={onChangeTarget}
                         className="self-center rounded-sm text-[14px] leading-[21px] font-medium text-primary outline-none hover:underline focus-visible:ring-2 focus-visible:ring-primary/25"
                     >
-                        Change number
+                        {changeLabel}
                     </Link>
                 </>
             )}

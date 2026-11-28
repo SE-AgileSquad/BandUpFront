@@ -1,16 +1,24 @@
 import type { NextConfig } from "next";
+import { getLoopbackApiUrl } from "./src/config/local-api";
 
 const nextConfig: NextConfig = {
   reactStrictMode: false,
 
-  trailingSlash: true,
+  output: "standalone",
 
-  output: "export",
+  trailingSlash: true,
 
   allowedDevOrigins: [],
 
-  images: {
-    unoptimized: true,
+  async rewrites() {
+    const apiUrl = process.env.NODE_ENV === "development"
+      ? getLoopbackApiUrl(process.env.NEXT_PUBLIC_API_URL)
+      : null;
+
+    return apiUrl ? [{
+      source: "/api/attempts/:attemptId/submit/",
+      destination: `${apiUrl.origin}/api/attempts/:attemptId/submit`,
+    }] : [];
   },
 };
 

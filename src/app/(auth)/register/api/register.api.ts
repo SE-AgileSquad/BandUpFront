@@ -3,12 +3,18 @@ import type {
     RegisterApi,
     RegisterResponse,
     ResendResponse,
+    StartOtpPayload,
     VerifyResponse,
 } from "../types";
+import type { AuthUser } from "@/types/auth";
 
 export const registerApi: RegisterApi = {
     async register(payload) {
-        const { data } = await api.post<RegisterResponse>("/auth/register", payload);
+        const { data } = await api.post<AuthUser>("/api/auth/register", payload);
+        return data;
+    },
+    async sendCode(payload: StartOtpPayload) {
+        const { data } = await api.post<RegisterResponse>("/api/auth/register/email/send", payload);
         return data;
     },
     async verify(payload) {

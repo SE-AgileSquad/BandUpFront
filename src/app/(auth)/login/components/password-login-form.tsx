@@ -13,7 +13,7 @@ import { FieldInput, FormField } from "@/components/auth/form-field";
 import { PasswordInput } from "@/components/auth/password-input";
 import { StatusNotice } from "@/components/auth/status-notice";
 import { ROUTES } from "@/constants/routes";
-import { refreshAuth } from "@/lib/auth-api";
+import { authKeys, fetchMe } from "@/lib/auth-api";
 import { normalizeEmail } from "@/lib/email";
 import { ApiError } from "@/types/api";
 import { useLoginMutation } from "../api/login.queries";
@@ -77,12 +77,15 @@ export function PasswordLoginForm({ next }: { next: string | null }) {
                 password: values.password,
                 captchaToken: values.captchaToken ?? "",
             });
-            await refreshAuth(queryClient);
+            const user = await fetchMe();
+            if (!user) throw new Error("Signed-in account could not be loaded.");
+            queryClient.setQueryData(authKeys.me, user);
             useLoginFlow.getState().reset();
             router.replace(next ?? ROUTES.DASHBOARD);
         } catch (error) {
+            setValue("captchaToken", null);
             if (error instanceof ApiError) {
-                if (error.status === 401 && error.code === "INVALID_CREDENTIALS") {
+                if (error.status === 401) {
                     setNotice("invalid");
                     return;
                 }

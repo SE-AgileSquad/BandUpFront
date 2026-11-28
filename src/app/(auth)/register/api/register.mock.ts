@@ -7,10 +7,10 @@ import {
     MOCK_VALID_CODE,
     REGISTER_LIMITS,
 } from "../constants/register";
-import type { RegisterApi, RegisterErrorCode } from "../types";
+import type { RegisterApi, RegisterErrorCode, StartOtpPayload } from "../types";
 
 type MockVerification = {
-    fullName: string;
+    displayName: string;
     email: string;
     wrongAttempts: number;
     lockedUntil: number | null;
@@ -32,7 +32,7 @@ function fail(
 function getVerification(id: string) {
     let entry = verifications.get(id);
     if (!entry) {
-        entry = { fullName: "BandUp Student", email: "", wrongAttempts: 0, lockedUntil: null };
+        entry = { displayName: "BandUp Student", email: "", wrongAttempts: 0, lockedUntil: null };
         verifications.set(id, entry);
     }
     return entry;
@@ -43,9 +43,23 @@ export const registerApi: RegisterApi = {
         await delay();
         if (payload.email === MOCK_TAKEN_EMAIL) fail(409, "EMAIL_ALREADY_REGISTERED");
 
+        const user = {
+            id: `mock-user-${payload.email}`,
+            displayName: payload.displayName,
+            email: payload.email,
+            role: "student",
+            creditBalance: 0,
+        };
+        mockSession.set(user);
+        return user;
+    },
+
+    async sendCode(payload: StartOtpPayload) {
+        await delay();
+
         const verificationId = `mock-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
         verifications.set(verificationId, {
-            fullName: payload.fullName,
+            displayName: payload.displayName,
             email: payload.email,
             wrongAttempts: 0,
             lockedUntil: null,
@@ -72,8 +86,10 @@ export const registerApi: RegisterApi = {
         if (code === MOCK_VALID_CODE) {
             const user = {
                 id: `mock-user-${verificationId}`,
-                fullName: entry.fullName,
+                displayName: entry.displayName,
                 email: entry.email,
+                role: "student",
+                creditBalance: 0,
             };
             mockSession.set(user);
             return { user };

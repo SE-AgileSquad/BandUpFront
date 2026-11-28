@@ -1,7 +1,9 @@
 export type AuthUser = {
   id: string;
-  fullName: string;
   email: string;
+  displayName: string;
+  role: string;
+  creditBalance: number;
 };
 
 export type OtpErrorCode =
@@ -20,7 +22,7 @@ export type OtpChallenge = {
 
 export type OtpState =
   | { kind: "idle" }
-  | { kind: "wrong"; attemptsRemaining: number }
+  | { kind: "wrong"; attemptsRemaining?: number }
   | { kind: "expired" }
   | { kind: "locked"; lockedUntil: number }
   | { kind: "success" };

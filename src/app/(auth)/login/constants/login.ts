@@ -6,7 +6,7 @@ export const LOGIN_METADATA = {
 } as const;
 
 export const LOGIN_LIMITS = {
-    codeLength: 5,
+    codeLength: 6,
     resendCooldownMs: 60_000,
     codeTtlMs: 5 * 60_000,
     lockMs: 15 * 60_000,
@@ -15,8 +15,8 @@ export const LOGIN_LIMITS = {
 
 export const MOCK_LOGIN_EMAIL = "student@bandup.test";
 export const MOCK_LOGIN_PASSWORD = "Password1";
-export const MOCK_VALID_CODE = "12345";
-export const MOCK_EXPIRED_CODE = "00000";
+export const MOCK_VALID_CODE = "123456";
+export const MOCK_EXPIRED_CODE = "000000";
 
 export const LOGIN_PANEL: {
     headline: string;

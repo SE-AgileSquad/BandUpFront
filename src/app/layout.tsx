@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import { Providers } from "@/providers/providers";
 import { siteConfig } from "@/constants/site";
 import "./globals.css";
 
-const inter = Inter({
-  subsets: ["latin"],
+const inter = localFont({
+  src: [
+    { path: "../../public/fonts/Inter/Inter Regular.otf", weight: "400" },
+    { path: "../../public/fonts/Inter/Inter Medium.otf", weight: "500" },
+    { path: "../../public/fonts/Inter/Inter SemiBold.otf", weight: "600" },
+    { path: "../../public/fonts/Inter/Inter Bold.otf", weight: "700" },
+    { path: "../../public/fonts/Inter/Inter ExtraBold.otf", weight: "800" },
+  ],
   variable: "--font-inter",
   display: "swap",
 });

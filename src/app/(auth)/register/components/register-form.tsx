@@ -14,7 +14,7 @@ import { StatusNotice } from "@/components/auth/status-notice";
 import { ROUTES } from "@/constants/routes";
 import { normalizeEmail } from "@/lib/email";
 import { ApiError } from "@/types/api";
-import { useRegisterMutation } from "../api/register.queries";
+import { useRegisterMutation, useSendRegisterCodeMutation } from "../api/register.queries";
 import { REGISTER_COPY } from "../constants/register";
 import { useRegisterFlow, useRegisterFlowReady } from "../hooks/use-register-flow";
 import {
@@ -25,7 +25,7 @@ import type { FieldErrors } from "../types";
 import { TermsField } from "./terms-field";
 
 const defaultValues: RegisterFormValues = {
-    fullName: "",
+    displayName: "",
     email: "",
     password: "",
     captchaToken: null,
@@ -39,6 +39,7 @@ export function RegisterForm() {
     const ready = useRegisterFlowReady();
     const startVerification = useRegisterFlow((state) => state.startVerification);
     const mutation = useRegisterMutation();
+    const sendCode = useSendRegisterCodeMutation();
     const [emailTaken, setEmailTaken] = useState(false);
     const [generalError, setGeneralError] = useState(false);
 
@@ -60,13 +61,13 @@ export function RegisterForm() {
     useEffect(() => {
         if (!ready) return;
         const session = useRegisterFlow.getState().session;
-        if (!session || getValues("fullName") || getValues("email")) return;
-        setValue("fullName", session.fullName);
+        if (!session || getValues("displayName") || getValues("email")) return;
+        setValue("displayName", session.displayName);
         setValue("email", session.email);
     }, [ready, getValues, setValue]);
 
     const hasErrors = Object.keys(errors).length > 0;
-    const submitDisabled = mutation.isPending || (isSubmitted && hasErrors);
+    const submitDisabled = mutation.isPending || sendCode.isPending || (isSubmitted && hasErrors);
 
     const onSubmit = handleSubmit(async (values) => {
         setEmailTaken(false);
@@ -79,29 +80,41 @@ export function RegisterForm() {
         }
 
         try {
-            const fullName = values.fullName.trim();
-            const response = await mutation.mutateAsync({
-                fullName,
+            const displayName = values.displayName.trim();
+            const user = await mutation.mutateAsync({
                 email,
                 password: values.password,
+                displayName,
                 captchaToken: values.captchaToken ?? "",
-                acceptedTerms: true,
             });
+
+            const response = await sendCode.mutateAsync({ email, displayName });
 
             startVerification({
                 verificationId: response.verificationId,
                 email,
                 maskedEmail: response.maskedEmail,
-                fullName,
+                displayName,
+                user,
                 expiresAt: Date.parse(response.expiresAt),
                 resendAvailableAt: Date.parse(response.resendAvailableAt),
                 lockedUntil: null,
             });
             router.push(ROUTES.REGISTER_VERIFY);
         } catch (error) {
+            setValue("captchaToken", null);
             if (error instanceof ApiError) {
-                if (error.status === 409 && error.code === "EMAIL_ALREADY_REGISTERED") {
+                if (error.status === 409) {
                     setEmailTaken(true);
+                    return;
+                }
+
+                if (error.status === 422 && error.code === "CAPTCHA_FAILED") {
+                    setError(
+                        "captchaToken",
+                        { type: "server", message: REGISTER_COPY.errors.captchaFailed },
+                        { shouldFocus: true },
+                    );
                     return;
                 }
 
@@ -143,11 +156,11 @@ export function RegisterForm() {
                     </p>
                 </div>
 
-                <FormField label={fields.fullName.label} error={errors.fullName?.message}>
+                <FormField label={fields.displayName.label} error={errors.displayName?.message}>
                     <FieldInput
-                        placeholder={fields.fullName.placeholder}
+                        placeholder={fields.displayName.placeholder}
                         autoComplete="name"
-                        {...register("fullName")}
+                        {...register("displayName")}
                     />
                 </FormField>
 
@@ -211,9 +224,9 @@ export function RegisterForm() {
                     size="default"
                     className="w-full"
                     disabled={submitDisabled}
-                    aria-busy={mutation.isPending}
+                    aria-busy={mutation.isPending || sendCode.isPending}
                 >
-                    {mutation.isPending ? (
+                    {mutation.isPending || sendCode.isPending ? (
                         <>
                             <Loader2 aria-hidden className="size-5 animate-spin" />
                             {REGISTER_COPY.submitting}

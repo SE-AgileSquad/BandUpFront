@@ -5,22 +5,23 @@ import { ApiError } from "@/types/api";
 import type { OtpChallenge, OtpState } from "@/types/auth";
 
 const DEFAULT_LOCK_MS = 15 * 60_000;
+type ChallengeTimers = Pick<OtpChallenge, "expiresAt" | "resendAvailableAt" | "lockedUntil">;
 
 type Notice = { title: string; description: string };
 type Timers = { expiresAt: number; resendAvailableAt: number };
 type ResendResult = { expiresAt: string; resendAvailableAt: string };
 
 type UseOtpChallengeOptions = {
-    challenge: OtpChallenge;
+    challenge: ChallengeTimers;
     verifyFn: (code: string) => Promise<unknown>;
     resendFn: () => Promise<ResendResult>;
     messages: { verify: Notice; resend: Notice };
     onLocked?: (lockedUntil: number | null) => void;
     onTimers?: (timers: Partial<Timers>) => void;
-    onSuccess?: () => void;
+    onSuccess?: (result: unknown) => void;
 };
 
-function initialState(challenge: OtpChallenge): OtpState {
+function initialState(challenge: ChallengeTimers): OtpState {
     const now = Date.now();
     if (challenge.lockedUntil && challenge.lockedUntil > now) {
         return { kind: "locked", lockedUntil: challenge.lockedUntil };
@@ -50,9 +51,9 @@ export function useOtpChallenge({
         setNotice(null);
         setIsVerifying(true);
         try {
-            await verifyFn(code);
+            const result = await verifyFn(code);
             setState({ kind: "success" });
-            onSuccess?.();
+            onSuccess?.(result);
         } catch (error) {
             if (error instanceof ApiError) {
                 const details = (error.details ?? {}) as {
@@ -60,10 +61,13 @@ export function useOtpChallenge({
                     lockedUntil?: string;
                 };
 
-                if (error.status === 400 && error.code === "INVALID_CODE") {
+                if (
+                    (error.status === 400 && error.code === "INVALID_CODE") ||
+                    (error.status === 422 && error.code === "INVALID_PASSWORD_RESET_CODE")
+                ) {
                     setState({
                         kind: "wrong",
-                        attemptsRemaining: details.attemptsRemaining ?? 0,
+                        attemptsRemaining: details.attemptsRemaining,
                     });
                     return;
                 }

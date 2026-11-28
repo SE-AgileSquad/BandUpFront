@@ -7,14 +7,9 @@ const pad = (value: number) => String(value).padStart(2, "0");
 export function useCountdown(targetTimestamp: number | null | undefined) {
     const target = targetTimestamp ?? null;
     const [now, setNow] = useState(() => Date.now());
-    const [prevTarget, setPrevTarget] = useState(target);
-
-    if (target !== prevTarget) {
-        setPrevTarget(target);
-        setNow(Date.now());
-    }
 
     useEffect(() => {
+        queueMicrotask(() => setNow(Date.now()));
         if (target === null || target <= Date.now()) return;
 
         const id = window.setInterval(() => {
