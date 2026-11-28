@@ -7,7 +7,6 @@ export function useTicker(active: boolean, intervalMs = 1000) {
 
     useEffect(() => {
         if (!active) return;
-        setNow(Date.now());
         const id = window.setInterval(() => setNow(Date.now()), intervalMs);
         return () => window.clearInterval(id);
     }, [active, intervalMs]);

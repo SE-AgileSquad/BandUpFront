@@ -15,14 +15,17 @@ export function ThemeReadout() {
   const [readout, setReadout] = useState<Readout | null>(null);
 
   useEffect(() => {
-    const body = getComputedStyle(document.body);
-    const root = getComputedStyle(document.documentElement);
-    setReadout({
-      fontFamily: body.fontFamily,
-      htmlClass: document.documentElement.className || "(none)",
-      background: root.getPropertyValue("--background").trim(),
-      primary: root.getPropertyValue("--primary").trim(),
+    const frame = requestAnimationFrame(() => {
+      const body = getComputedStyle(document.body);
+      const root = getComputedStyle(document.documentElement);
+      setReadout({
+        fontFamily: body.fontFamily,
+        htmlClass: document.documentElement.className || "(none)",
+        background: root.getPropertyValue("--background").trim(),
+        primary: root.getPropertyValue("--primary").trim(),
+      });
     });
+    return () => cancelAnimationFrame(frame);
   }, [theme, resolvedTheme]);
 
   const rows: [string, string][] = [
