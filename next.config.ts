@@ -4,6 +4,8 @@ import { getLoopbackApiUrl } from "./src/config/local-api";
 const nextConfig: NextConfig = {
   reactStrictMode: false,
 
+  output: "standalone",
+
   trailingSlash: true,
 
   allowedDevOrigins: [],
